@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
-// import { fetchDirections } from "../actions/actionTypes";
+import { fetchDirections } from "../actions/actionTypes";
+import { connect } from "react-redux";
 import { Well } from "react-bootstrap";
 
 
-// TODO: Form Styling, Validation, Parameter Inputs
+// TODO: Form Styling, Validation, Parameter Inputs ( checlist needs fixing )
+// FIX initial values - use initialValues props and enableReinitialize
 
 
 class SearchInput extends Component {
     renderInput(field) {
-        // console.log(field);
         // renders origin and destination text input fields
         
         return (
@@ -23,6 +24,8 @@ class SearchInput extends Component {
         let key = 0;
         return choices.map(
             choice => {
+                choice.toLowerCase() === "no" ? choice = "False" : {};
+                choice.toLowerCase() === "yes" ? choice = "True" : {};
                 return <option key={key++} value={choice.toLowerCase()}>{choice}</option>
             }
         );
@@ -34,48 +37,67 @@ class SearchInput extends Component {
         return (
             <div>
                 <label>{field.label}</label>
-                <select className="form-control custom-select" {...field.input}>
+                <select className="form-control custom-select" value={field.value} {...field.input}>
                     {field.selectArray}
                 </select>
             </div>
         );
     }
 
-    // render checklist/check for form
-
-    renderChecklist() {
-
+    createCheckArray(...checkboxes) {
+        let key = 0;
+        return checkboxes.map(checkbox => {
+            return (
+                <div className="form-check form-check-inline" key={key++}>
+                    <input className="form-check-input" type="checkbox" id={`inlineCheckbox${key}`} value={checkbox.toLowerCase()} />
+                    <label className="form-check-label" htmlFor={`inlineCheckbox${key}`}>{checkbox}</label>
+                </div>
+            );
+        });
     }
+
+    renderChecklist(field) {
+        return (
+            <div {...field.input}>
+                <label>{field.label}</label>
+                {field.checkArray}
+            </div>
+        );
+    }
+    /*
+    const avoid_array = this.createCheckArray("Tolls", "Highways", "Ferries", "Indoor");
+<Field name="avoid" label="Select features to avoid on routes." 
+checkArray={avoid_array} component={this.renderChecklist} />
+    */
 
     onSubmit(values) {
         console.log(values);
+        this.props.fetchDirections(values.origin, values.destination);
     }
 
     render() {
         const travel_array = this.createSelectArray("Driving", "Bicycling", "Walking", "Transit");
+        const alt_array = this.createSelectArray("No", "Yes");
+        const unit_array = this.createSelectArray("Imperial", "Metric");
+        
         const { handleSubmit } = this.props;
         return (
             <Well>
             <form className="form-group" onSubmit={handleSubmit(this.onSubmit.bind(this))}>
 
-                <Field
-                name="origin"
-                placeholder="Enter Origin"
-                component={this.renderInput}
-                />
+                <Field name="origin" placeholder="Enter Origin" component={this.renderInput} />
+                <Field name="destination" placeholder="Enter Destination" component={this.renderInput} />
 
-                <Field
-                name="destination"
-                placeholder="Enter Destination"
-                component={this.renderInput}
-                />
+                <Field name="travelmode" label="How would you like to travel by?"
+                selectArray={travel_array} value={"driving"} 
+                component={this.renderSelect} />
 
-                <Field
-                name="travelmode"
-                label="Enter a mode of travel:"
-                selectArray={travel_array}
-                component={this.renderSelect}
-                />
+                <Field name="alternativeroute" label="Do you want alternative routes?"
+                selectArray={alt_array} value={"false"} component={this.renderSelect} />
+
+                <Field name="unit" label="Display results in Imperial or Metric units?"
+                selectArray={unit_array} value={"imperial"} 
+                component={this.renderSelect} />
 
                 <button type="submit" className="btn btn-primary">Search</button>
             </form>
@@ -91,4 +113,12 @@ function validate() {
     return errors;
 }
 
-export default reduxForm({ validate: validate, form: "SearchInputForm" })(SearchInput); // add connect later
+export default reduxForm({ 
+    validate: validate, 
+    form: "SearchInputForm",
+    enableReinitialize : true
+})(
+    connect(
+        () => ({initialValues: {alternativeroute: "false", unit: "imperial", travelmode: "driving"} 
+    }), { fetchDirections: fetchDirections } )(SearchInput)
+);
