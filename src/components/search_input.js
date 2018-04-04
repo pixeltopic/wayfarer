@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
-import { fetchDirections } from "../actions/actionTypes";
+import { fetchDirections, updateForm } from "../actions/actionTypes";
 import { connect } from "react-redux";
 import { Well } from "react-bootstrap";
 
@@ -10,6 +10,15 @@ import { Well } from "react-bootstrap";
 
 
 class SearchInput extends Component {
+    // componentWillMount() {
+    //     const data = {
+    //         travelmode: "driving",
+    //         alternativeroute: "false", 
+    //         unit: "imperial", 
+    //     };
+    //     this.props.updateForm(data);
+    // }
+
     renderInput(field) {
         // renders origin and destination text input fields
         
@@ -71,15 +80,16 @@ checkArray={avoid_array} component={this.renderChecklist} />
     */
 
     onSubmit(values) {
-        console.log(values);
+        this.props.updateForm(values);
         this.props.fetchDirections(values.origin, values.destination);
+        console.log(this.props.formContent);
     }
 
     render() {
         const travel_array = this.createSelectArray("Driving", "Bicycling", "Walking", "Transit");
         const alt_array = this.createSelectArray("No", "Yes");
         const unit_array = this.createSelectArray("Imperial", "Metric");
-        
+
         const { handleSubmit } = this.props;
         return (
             <Well>
@@ -89,15 +99,13 @@ checkArray={avoid_array} component={this.renderChecklist} />
                 <Field name="destination" placeholder="Enter Destination" component={this.renderInput} />
 
                 <Field name="travelmode" label="How would you like to travel by?"
-                selectArray={travel_array} value={"driving"} 
-                component={this.renderSelect} />
+                selectArray={travel_array} component={this.renderSelect} />
 
                 <Field name="alternativeroute" label="Do you want alternative routes?"
-                selectArray={alt_array} value={"false"} component={this.renderSelect} />
+                selectArray={alt_array} component={this.renderSelect} />
 
                 <Field name="unit" label="Display results in Imperial or Metric units?"
-                selectArray={unit_array} value={"imperial"} 
-                component={this.renderSelect} />
+                selectArray={unit_array} component={this.renderSelect} />
 
                 <button type="submit" className="btn btn-primary">Search</button>
             </form>
@@ -113,12 +121,13 @@ function validate() {
     return errors;
 }
 
+function mapStateToProps(state) {
+    return {formContent: state.formContent};
+}
+
 export default reduxForm({ 
     validate: validate, 
     form: "SearchInputForm",
-    enableReinitialize : true
 })(
-    connect(
-        () => ({initialValues: {alternativeroute: "false", unit: "imperial", travelmode: "driving"} 
-    }), { fetchDirections: fetchDirections } )(SearchInput)
+    connect(mapStateToProps, { fetchDirections, updateForm })(SearchInput)
 );
