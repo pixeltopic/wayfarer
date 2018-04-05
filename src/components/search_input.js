@@ -82,6 +82,7 @@ checkArray={avoid_array} component={this.renderChecklist} />
     onSubmit(values) {
         this.props.updateForm(values);
         this.props.fetchDirections(values.origin, values.destination);
+        console.log(values);
         console.log(this.props.formContent);
     }
 
@@ -121,13 +122,33 @@ function validate() {
     return errors;
 }
 
+// reduxForm does not have props.initialValues available, 
+// because it first connects and then add reduxForm, 
+// if move connect around the reduxForm, then it should work
+
 function mapStateToProps(state) {
-    return {formContent: state.formContent};
+    return {
+        initialValues: {alternativeroute: "false", unit: "imperial", travelmode: "driving"},
+        formContent: state.formContent
+    };
 }
 
-export default reduxForm({ 
-    validate: validate, 
-    form: "SearchInputForm",
-})(
-    connect(mapStateToProps, { fetchDirections, updateForm })(SearchInput)
+export default connect(mapStateToProps, { fetchDirections, updateForm })(
+    reduxForm({ 
+        validate: validate, 
+        form: "SearchInputForm",
+        enableReinitialize : true
+    })(SearchInput)
 );
+
+
+// function mapStateToProps(state) {
+//     return {formContent: state.formContent};
+// }
+
+// export default reduxForm({ 
+//     validate: validate, 
+//     form: "SearchInputForm",
+// })(
+//     connect(mapStateToProps, { fetchDirections, updateForm })(SearchInput)
+// );
