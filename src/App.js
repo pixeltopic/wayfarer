@@ -4,6 +4,7 @@ import './App.css';
 
 import ShowDirections from "./components/show_directions.js";
 import SearchInput from "./components/search_input";
+import { Well } from "react-bootstrap";
 
 // cd C:\Users\xmobl\Documents\GitRepos\wayfarer
 
@@ -54,7 +55,9 @@ class App extends Component {
                 </header>
                 <div>
                     <ShowDirections />
-                    <SearchInput />
+                    <Well>
+                        <SearchInput />
+                    </Well>
                 </div>
             </div>
          );

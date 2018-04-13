@@ -3,17 +3,19 @@ import { Field, reduxForm } from "redux-form";
 import { fetchDirections, updateForm } from "../actions/actionTypes";
 import { connect } from "react-redux";
 // import { Well } from "react-bootstrap";
-import { Form, FormGroup, ControlLabel, FormControl, Button } from "react-bootstrap";
+import { Form, FormGroup, ControlLabel, FormControl, Button, Checkbox } from "react-bootstrap";
 
 
-// TODO: Form Styling, Validation, Parameter Inputs
+// TODO: Validation, warnings for indoor selection, short hover descriptions of options?
 
-// why won't inline styling on form work?
+
 // finish URL builder action creator for fetching directions
+
 // FIX initial values - use initialValues props and enableReinitialize (DONE!)
 
 // { input, meta, custom prop parameters, ...props } must always be a parameter.
-const renderInput = ({input, meta, name, type, placeholder, label, ...props}) => {
+// ...props preserves any leftover properties that would be lost in the destructuring
+const renderInput = ({ input, meta, name, type, placeholder, label, ...props }) => {
     return (
         <div>
             <ControlLabel>{label}</ControlLabel>{' '}
@@ -24,7 +26,7 @@ const renderInput = ({input, meta, name, type, placeholder, label, ...props}) =>
                 {...props} {...input}
             />
         </div>
-    )
+    );
 }
 
 const renderSelect = ({ input, meta, name, selectArray, label, ...props }) => {
@@ -38,15 +40,38 @@ const renderSelect = ({ input, meta, name, selectArray, label, ...props }) => {
                 {selectArray}
             </FormControl>
         </div>
-    )
+    );
+}
+
+const ynSelect = ({ input, meta, name, label, ...props }) => {
+    return (
+        <div>
+            <ControlLabel>{label}</ControlLabel>{' '}
+            <FormControl 
+                componentClass="select"
+                name={name}
+                {...props} {...input}>
+                <option key="0" value="false">No</option>
+                <option key="1" value="true">Yes</option>
+            </FormControl>
+        </div>
+    );
+}
+
+const checkBox = ({ input, meta, name, label, ...props }) => {
+    return <Checkbox {...props} {...input} inline>{label}</Checkbox>
+        
 }
 
 class SearchInput extends Component {
-    // constructor(props) {
-    //     super(props);
-    //     //this.handleChange = this.handleChange.bind(this);
-    //     // this.handleSubmit = this.handleSubmit.bind(this);
-    // }
+    createSelectArray(...arr) {
+        // dynamically initializes Select dropdown given list of str
+        return arr.map(
+            (element) => {
+                return <option key={element} value={element.toLowerCase()}>{element}</option>
+            }
+        );
+    }
 
     onSubmit(values) {
         // uses callback from App to force-update parent (App's) state.
@@ -55,18 +80,41 @@ class SearchInput extends Component {
     }
 
     render() {
+        const travel_array = this.createSelectArray("Driving", "Bicycling", "Walking", "Transit");
+        const unit_array = this.createSelectArray("Imperial", "Metric");
+
         const { handleSubmit } = this.props;
         return(
             <Form onSubmit={handleSubmit(this.onSubmit.bind(this))} inline>
                 <FormGroup controlId="formInlineOrigin">
-                    <Field name="originInput" type="text" placeholder="e.g. Irvine" label="Origin Input" component={renderInput} />
+                    <Field name="originInput" type="text" placeholder="e.g. Irvine" label="Origin:" component={renderInput} />
                 </FormGroup>{' '}
 
                 <FormGroup controlId="formInlineDestination">
-                    <Field name="destinationInput" type="text" placeholder="e.g. Anaheim" label="Destination Input" component={renderInput} />
+                    <Field name="destinationInput" type="text" placeholder="e.g. Anaheim" label="Destination:" component={renderInput} />
                 </FormGroup>{' '}
 
-                <Button type="submit">Find Directions</Button>
+                <FormGroup controlId="formControlsSelect1">
+                    <Field name="travelMode" selectArray={travel_array} label="Travel Mode:" component={renderSelect} />
+                </FormGroup>{' '}
+
+                <FormGroup controlId="formControlsSelect2">
+                    <Field name="alternativeRoute" label="Alternative Routes:" component={ynSelect} />
+                </FormGroup>{' '}
+
+                <FormGroup controlId="formControlsSelect3">
+                    <Field name="unit" selectArray={unit_array} label="Unit Display:" component={renderSelect} />
+                </FormGroup>{' '}
+
+                <FormGroup controlId="formControlsCheck">
+                    <ControlLabel>Avoid these features:</ControlLabel>{' '}
+                    <Field name="avoidTolls" label="Tolls" component={checkBox} />
+                    <Field name="avoidHighways" label="Highways" component={checkBox} />
+                    <Field name="avoidFerries" label="Ferries" component={checkBox} />
+                    <Field name="avoidIndoor" label="Indoor" component={checkBox} />
+                </FormGroup>
+
+                {'  '}<Button type="submit">Find Directions</Button>
             </Form>
         );
 
@@ -80,7 +128,7 @@ function validate(values) {
 
 function mapStateToProps(state) {
     return {
-        initialValues: {originInput: "Irvine"},
+        initialValues: { originInput: "Irvine", travelMode: "driving", alternativeRoute: "false", unit: "imperial" },
         formContent: state.formContent
     };
 }
