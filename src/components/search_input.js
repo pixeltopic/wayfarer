@@ -25,6 +25,9 @@ const renderInput = ({ input, meta, name, type, placeholder, label, ...props }) 
                 placeholder={placeholder}
                 {...props} {...input}
             />
+            <div className="text-help">
+                { meta.touched ? meta.error : "" }
+            </div>
         </div>
     );
 }
@@ -39,6 +42,9 @@ const renderSelect = ({ input, meta, name, selectArray, label, ...props }) => {
                 {...props} {...input}>
                 {selectArray}
             </FormControl>
+            <div className="text-help">
+                { meta.touched ? meta.error : "" }
+            </div>
         </div>
     );
 }
@@ -77,6 +83,7 @@ class SearchInput extends Component {
         // uses callback from App to force-update parent (App's) state.
         console.log("Form submitted"); 
         console.log(values);
+        this.props.fetchDirections(values);
     }
 
     render() {
@@ -123,12 +130,25 @@ class SearchInput extends Component {
 
 function validate(values) {
     const errors = {};
+
+    if (!values.originInput) {
+        errors.originInput = "Enter a valid origin."
+    }
+
+    if (!values.destinationInput) {
+        errors.destinationInput = "Enter a valid destination.";
+    }
+
+    if (values.travelMode !== "walking" && values.avoidIndoor === true) {
+        errors.travelMode = "You can only avoid indoor routes if you are walking."
+    }
+
     return errors;
 }
 
 function mapStateToProps(state) {
     return {
-        initialValues: { originInput: "Irvine", travelMode: "driving", alternativeRoute: "false", unit: "imperial" },
+        initialValues: { travelMode: "driving", alternativeRoute: "false", unit: "imperial" },
         formContent: state.formContent
     };
 }

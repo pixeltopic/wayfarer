@@ -16,11 +16,25 @@ export function updateForm(formContent){
     };
 }
 
-export function fetchDirections(origin, destination) {
+export function fetchDirections({ originInput, destinationInput, travelMode, alternativeRoute, unit, ...values }) {
     // can be modified for use in search_input.js, add parameters
-    // const origin = "Anaheim";
-    // const destination = "Irvine";
-    const request = axios.get(`${PROXY_URL}${ROOT_URL}json?origin=${origin}&destination=${destination}&key=${MAP_API_KEY}`);
+    // https://maps.googleapis.com/maps/api/directions/
+    // json?origin=Toronto&destination=Montreal
+    // &avoid=highways|tolls|ferries&mode=bicycling&alternatives=true&units=imperial
+    // &key=
+    let BUILDURL = `${PROXY_URL}${ROOT_URL}json?origin=${originInput}&destination=${destinationInput}
+    &mode=${travelMode}&alternatives=${alternativeRoute}&units=${unit}`;
+
+    let avoidArr = [];
+    if (values.avoidTolls) { avoidArr.push("tolls"); }
+    if (values.avoidHighways) { avoidArr.push("highways"); }
+    if (values.avoidFerries) { avoidArr.push("ferries"); }
+    if (values.avoidIndoor) { avoidArr.push("indoor"); }
+    const avoidStr = avoidArr.join("|");
+
+    if (avoidStr !== "") { BUILDURL += `&avoid=${avoidStr}`; }
+    console.log(BUILDURL);
+    const request = axios.get(BUILDURL + `&key=${MAP_API_KEY}`);
 
     return {
         type: FETCH_DIRECTIONS,
