@@ -54,10 +54,10 @@ class App extends Component {
                     <h1 className="App-title">Wayfarer</h1>
                 </header>
                 <div>
-                    <ShowDirections />
                     <Well>
                         <SearchInput />
                     </Well>
+                    <ShowDirections />
                 </div>
             </div>
          );

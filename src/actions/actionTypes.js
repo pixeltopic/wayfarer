@@ -4,7 +4,7 @@ import { MAP_API_KEY } from "./api_keys";
 export const FETCH_DIRECTIONS = "fetch_directions";
 export const FORM_CONTENT = "form_content";
 
-const ROOT_URL = "https://maps.googleapis.com/maps/api/directions/";
+const GOOGLE_ROOT_URL = "https://maps.googleapis.com/maps/api/directions/";
 const PROXY_URL = "https://cors-anywhere.herokuapp.com/"; // workaround for CORS
 
 // const url = "json?origin=Toronto&destination=Montreal&key=YOUR_API_KEY"
@@ -22,7 +22,7 @@ export function fetchDirections({ originInput, destinationInput, travelMode, alt
     // json?origin=Toronto&destination=Montreal
     // &avoid=highways|tolls|ferries&mode=bicycling&alternatives=true&units=imperial
     // &key=
-    let BUILDURL = `${PROXY_URL}${ROOT_URL}json?origin=${originInput}&destination=${destinationInput}
+    let BUILDURL = `${PROXY_URL}${GOOGLE_ROOT_URL}json?origin=${originInput}&destination=${destinationInput}
     &mode=${travelMode}&alternatives=${alternativeRoute}&units=${unit}`;
 
     let avoidArr = [];
@@ -33,7 +33,7 @@ export function fetchDirections({ originInput, destinationInput, travelMode, alt
     const avoidStr = avoidArr.join("|");
 
     if (avoidStr !== "") { BUILDURL += `&avoid=${avoidStr}`; }
-    console.log(BUILDURL);
+    // console.log(BUILDURL);
     const request = axios.get(BUILDURL + `&key=${MAP_API_KEY}`);
 
     return {
@@ -42,7 +42,7 @@ export function fetchDirections({ originInput, destinationInput, travelMode, alt
     };
 }
 
-export function fetchMapquest() {
+export function fetchMapQuest() {
 
 }
 
