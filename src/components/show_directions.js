@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-// import _ from "lodash";
+import _ from "lodash";
 import { fetchDirections } from "../actions/actionTypes";
 import { formValueSelector } from "redux-form";
-import { Tabs, Tab, Panel } from "react-bootstrap";
+import { Tabs, Tab, Panel, ListGroup, ListGroupItem } from "react-bootstrap";
 
 // This component displays the STEPS from origin to destination.
 class ShowDirections extends Component {
@@ -11,33 +11,68 @@ class ShowDirections extends Component {
     //     this.props.fetchDirections();
     // }
 
+    generateSteps(stepArr) {
+        // given an array of steps, creates a list with properly formatted directions/distance/time
+        // result of this function will be the data of a tab.
+        // routeKey used to know which alternate route it is generating for to create a unique key.
+        let key = -1;
+        const listContents = stepArr.map(
+            (step) => {
+                const dist = step.distance.text;
+                const dur = step.duration.text;
+                const instructions = step.html_instructions.replace(/<\/?b>/g, '');
+                
+                return (
+                    <ListGroupItem key={key++} header={instructions}>{dist}, {dur}</ListGroupItem>
+                );
+            }
+        );
+        return (
+            <ListGroup>
+                {listContents}
+            </ListGroup>
+        );
+
+    }
+
     generateTabs() {
-        // if (this.props.googleData.length === 0) {
-        //     return (
-        //         <Tab eventKey={1} title="Tab 1">
-        //             Tab 1 content
-        //         </Tab>
-        //     );
-        // }
 
         for (let routenum in this.props.googleData) {
             console.log(this.props.googleData[routenum]);
         }
+        let key = -1;
+        const tabContents = _.map(this.props.googleData, (route) => {
+            key++;
+            return (
+                <Tab key={key} eventKey={key} title={`Route ${key+1}`}>
+                    {this.generateSteps(route["legs"]["0"]["steps"])}
+                </Tab>
+            );
+        });
+
+        // route["legs"]["0"][xxx] to access start/end addr, distance, time and stuff
+        // TO DO: fix readability of directions
+        // add primary route information above the list (addr, distance, time, etc)
+        return (
+            <Tabs defaultActiveKey={0} id="DirectionTabs">
+                {tabContents}
+             </Tabs>
+        );
     }
 
     render() {
         console.log(this.props.googleData);
-        this.generateTabs();
+        if (_.isEmpty(this.props.googleData)) {
+            console.log("Flagged"); // put some prettier error message here later
+            return <div/>;
+        }
+        //this.generateTabs();
         //console.log(this.props.originInput, ">>", this.props.destinationInput);
         return (
             <div>
                 <Panel>
-                    <Panel.Body>
-                        <Tabs defaultActiveKey={1} id="DirectionTabs">
-                            <Tab eventKey={1} title="Tab 1">
-                                Tab 1 content
-                            </Tab>
-                        </Tabs>
+                    <Panel.Body> 
+                        {this.generateTabs()}
                     </Panel.Body>
                 </Panel>
             </div>
