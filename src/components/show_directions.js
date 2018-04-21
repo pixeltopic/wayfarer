@@ -14,13 +14,12 @@ class ShowDirections extends Component {
     generateSteps(stepArr) {
         // given an array of steps, creates a list with properly formatted directions/distance/time
         // result of this function will be the data of a tab.
-        // routeKey used to know which alternate route it is generating for to create a unique key.
-        let key = -1;
+        let key = -1; // first key starts at 0
         const listContents = stepArr.map(
             (step) => {
                 const dist = step.distance.text;
                 const dur = step.duration.text;
-                const instructions = step.html_instructions.replace(/<\/?b>/g, '');
+                const instructions = step.html_instructions.replace(/<\/?b>/g, "").replace(/<\/?div>/g, "").replace(/&nbsp;/g, "").replace(/<div style="font-size:0\.9em">/g, ", ").replace(/&amp;/g, "&");
                 
                 return (
                     <ListGroupItem key={key++} header={instructions}>{dist}, {dur}</ListGroupItem>
@@ -40,7 +39,7 @@ class ShowDirections extends Component {
         for (let routenum in this.props.googleData) {
             console.log(this.props.googleData[routenum]);
         }
-        let key = -1;
+        let key = -1; // first key begins at 0
         const tabContents = _.map(this.props.googleData, (route) => {
             key++;
             return (
@@ -51,7 +50,7 @@ class ShowDirections extends Component {
         });
 
         // route["legs"]["0"][xxx] to access start/end addr, distance, time and stuff
-        // TO DO: fix readability of directions
+        // TO DO:
         // add primary route information above the list (addr, distance, time, etc)
         return (
             <Tabs defaultActiveKey={0} id="DirectionTabs">
