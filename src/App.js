@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-import ShowDirections from "./components/show_directions.js";
+// import ShowDirections from "./components/show_directions.js";
 import SearchInput from "./components/search_input";
+import NavBar from "./components/nav_bar";
+
+// import { Link } from "react-router-dom";
 import { Well } from "react-bootstrap";
 
 // cd C:\Users\xmobl\Documents\GitRepos\wayfarer
@@ -54,10 +57,10 @@ class App extends Component {
                     <h1 className="App-title">Wayfarer</h1>
                 </header>
                 <div>
+                    <NavBar/>
                     <Well>
                         <SearchInput />
-                    </Well>
-                    <ShowDirections />
+                    </Well> 
                 </div>
             </div>
          );

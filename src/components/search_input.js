@@ -81,7 +81,7 @@ class SearchInput extends Component {
 
     onSubmit(values) {
         // uses callback from App to force-update parent (App's) state.
-        // console.log("Form submitted"); 
+        console.log("Form submitted"); 
         // console.log(values);
         this.props.fetchDirections(values);
     }

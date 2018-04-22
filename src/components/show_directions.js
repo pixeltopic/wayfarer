@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import _ from "lodash";
 import { fetchDirections } from "../actions/actionTypes";
-import { formValueSelector } from "redux-form";
-import { Tabs, Tab, Panel, ListGroup, ListGroupItem } from "react-bootstrap";
+// import { formValueSelector } from "redux-form";
+import NavBar from "./nav_bar.js";
+import { Tabs, Tab, Panel, ListGroup, ListGroupItem, Alert } from "react-bootstrap";
 
 // This component displays the STEPS from origin to destination.
 class ShowDirections extends Component {
@@ -63,12 +64,20 @@ class ShowDirections extends Component {
         console.log(this.props.googleData);
         if (_.isEmpty(this.props.googleData)) {
             console.log("Flagged"); // put some prettier error message here later
-            return <div/>;
+            return (
+                <div>
+                    <NavBar />
+                    <Alert bsStyle="warning">
+                        <strong>No Info Found...</strong> Looks like you haven't searched anything, or your search was invalid.
+                    </Alert>
+                </div>
+            );
         }
         //this.generateTabs();
         //console.log(this.props.originInput, ">>", this.props.destinationInput);
         return (
             <div>
+                <NavBar />
                 <Panel>
                     <Panel.Body> 
                         {this.generateTabs()}

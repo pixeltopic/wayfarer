@@ -9,7 +9,10 @@ import { createStore, applyMiddleware } from "redux";
 import promise from "redux-promise";
 import reducers from "./reducers/rootReducer";
 import './index.css';
+
 import App from './App';
+import ShowDirections from "./components/show_directions.js";
+
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import registerServiceWorker from './registerServiceWorker';
 
@@ -20,6 +23,7 @@ ReactDOM.render(
         <BrowserRouter>
             <div>
                 <Switch>
+                    <Route path="/navi" component={ShowDirections} />
                     <Route path="/" component={App} />
                 </Switch>
             </div>
