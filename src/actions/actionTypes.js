@@ -1,5 +1,5 @@
 import axios from "axios";
-import { MAP_API_KEY } from "./api_keys";
+import { MAP_API_KEY, INCIDENTS_API_KEY } from "./apiKeys";
 
 export const FETCH_DIRECTIONS = "fetch_directions";
 export const FORM_CONTENT = "form_content";
@@ -42,8 +42,12 @@ export function fetchDirections({ originInput, destinationInput, travelMode, alt
     };
 }
 
-export function fetchMapQuest() {
+export function fetchIncidents(lat1, lng1, lat2, lng2) {
+    // given latlong, retrieve data from API
+    // call this on the age itself. WIP
+    const MAPQUEST_URL = `http://www.mapquestapi.com/traffic/v2/${INCIDENTS_API_KEY}?key=KEY&boundingBox={39.95},{-105.25},{39.52},{-104.71}&filters=construction,incidents
 
+    `;
 }
 
 export function fetchOpenWeather() {

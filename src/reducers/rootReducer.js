@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import GoogleReducer from "./reducer_google";
+import reducerDirections from "./reducerDirections";
 import FormContent from "./reducer_form_content";
 import { reducer as formReducer } from "redux-form";
 
@@ -13,7 +13,7 @@ state = {
 
 const rootReducer = combineReducers({
     formContent: FormContent,
-    googleData: GoogleReducer,
+    directionData: reducerDirections,
     form: formReducer
 });
 

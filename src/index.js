@@ -11,7 +11,7 @@ import reducers from "./reducers/rootReducer";
 import './index.css';
 
 import App from './App';
-import ShowDirections from "./components/show_directions.js";
+import ShowDirections from "./components/showDirections.js";
 
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import registerServiceWorker from './registerServiceWorker';

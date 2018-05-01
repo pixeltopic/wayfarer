@@ -121,7 +121,7 @@ class SearchInput extends Component {
                     <Field name="avoidIndoor" label="Indoor" component={checkBox} />
                 </FormGroup>
 
-                {'  '}<Button type="submit">Find Directions</Button>
+                {'  '}<Button type="submit">Search</Button>
             </Form>
         );
 

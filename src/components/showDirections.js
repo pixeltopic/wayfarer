@@ -3,8 +3,10 @@ import { connect } from "react-redux";
 import _ from "lodash";
 import { fetchDirections } from "../actions/actionTypes";
 // import { formValueSelector } from "redux-form";
-import NavBar from "./nav_bar.js";
+import NavBar from "./navBar.js";
 import { Tabs, Tab, Panel, ListGroup, ListGroupItem, Alert } from "react-bootstrap";
+
+// TODO: add origin/destination to each route tab for more detail along with any other useful details.
 
 // This component displays the STEPS from origin to destination.
 class ShowDirections extends Component {
@@ -37,11 +39,11 @@ class ShowDirections extends Component {
 
     generateTabs() {
 
-        for (let routenum in this.props.googleData) {
-            console.log(this.props.googleData[routenum]);
+        for (let routenum in this.props.directionData) {
+            console.log(this.props.directionData[routenum]);
         }
         let key = -1; // first key begins at 0
-        const tabContents = _.map(this.props.googleData, (route) => {
+        const tabContents = _.map(this.props.directionData, (route) => {
             key++;
             return (
                 <Tab key={key} eventKey={key} title={`Route ${key+1}`}>
@@ -61,8 +63,8 @@ class ShowDirections extends Component {
     }
 
     render() {
-        console.log(this.props.googleData);
-        if (_.isEmpty(this.props.googleData)) {
+        console.log(this.props.directionData);
+        if (_.isEmpty(this.props.directionData)) {
             console.log("Flagged"); // put some prettier error message here later
             return (
                 <div>
@@ -90,8 +92,8 @@ class ShowDirections extends Component {
 
 function mapStateToProps(state) {
     //const selector = formValueSelector("SearchInputForm");
-    return { googleData: state.googleData };
-    //return { googleData: state.googleData, originInput: selector(state, "originInput"), 
+    return { directionData: state.directionData };
+    //return { directionData: state.directionData, originInput: selector(state, "originInput"), 
     //destinationInput: selector(state, "destinationInput") };
 }
 
