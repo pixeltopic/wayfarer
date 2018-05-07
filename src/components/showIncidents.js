@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import _ from "lodash";
-import { genLatLngQueue, genSegmentArr} from "../logic/incidentLogic.js";
-import { getDistance } from "geolib";
+import { genLatLngQueue, genSegmentObj } from "../logic/incidentLogic.js";
+// import { getDistance } from "geolib";
 
 
 // important limitation:
@@ -26,17 +26,19 @@ class ShowIncidents extends Component {
         // console.log("corner3:", { lat: corner1.lat, lng: corner2.lng });
         // console.log("len/wid:", length, width);
 
-        
-
-
-        // console.log(genSegmentArr());
-
         for (let routeNum in data) {
             const calcTest = genLatLngQueue(data[routeNum]);
             console.log(calcTest);
-            console.log(genSegmentArr(calcTest));
+            console.log(genSegmentObj(calcTest));
         }
 
+    }
+
+    doSegmentObjAction(routeNum, segObj) {
+        // given an object of valid segments, loop through and fire actions to the mapquest API.
+        // if there were alternative routes calculated, make sure to account for those too.
+        // right now there are no differentiation between objects.
+        console.log("WIP");
     }
 
     render() {

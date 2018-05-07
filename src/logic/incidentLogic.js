@@ -1,4 +1,4 @@
-import _ from "lodash";
+// import _ from "lodash";
 import { getDistance } from "geolib";
 
 export const genLatLngQueue = (route) => {
@@ -15,132 +15,66 @@ export const genLatLngQueue = (route) => {
 }
 
 export const assertSquareMiles = (arr) => {
-    // given array of corner pairs, assert they are all under 50,000 square miles.
-    const kmSq = 129499;
+    // given array of corner pairs, assert they are all under 50,000 square miles and not equal to zero.
+    
     arr.forEach((box) => {
-        const corner1 = box.corner1;
-        const corner2 = box.corner2;
+        const { corner1, corner2 } = box;
+        // const corner1 = box.corner1;
+        // const corner2 = box.corner2;
         const length = getDistance(corner1, { lat: corner1.lat, lng: corner2.lng }) / 1000;
         const width = getDistance(corner2, { lat: corner1.lat, lng: corner2.lng }) / 1000;
         console.log("Debugging l*w:", length*width, "< 129499");
-    })
+    });
+
+    const newArr = arr.filter((box) => {
+        const { corner1, corner2 } = box;
+        const length = getDistance(corner1, { lat: corner1.lat, lng: corner2.lng }) / 1000;
+        const width = getDistance(corner2, { lat: corner1.lat, lng: corner2.lng }) / 1000;
+        return length * width !== 0;
+    });
+
+    return newArr;
 }
 
-/* new algorithm proposal
+export const genSegmentObj = (latLngArr) => {
+    // returns an object with int keys and a corner1 and corner2 attribute which then contains 
+    // latlngs for a bounding box. The bounding box is the fewest number of < 50k square mile segments.
 
-shift out from list.
-iterate through array backwards to find the FIRST latlong that is under 50,000.
-return that pair, and discard everything before the latlong just found
-repeat until main list is length 0
-
-... reverse array, pop() corner1 out, then iterate forward for corner2.
-for the FIRST latlong that is under 50,000 when W * L, that is corner 2 so...
-once found, return index, get data and return pair, then SLICE array,
-repeat process until array length 0
-*/
-
-export const genSegmentArr1 = (latLngArr) => {
-    let result = [];
-    const kmSq = 129499;
-    let tempArr = latLngArr.reverse();
-    let corner1;
-    let corner2;
-    let i;
-    while (tempArr.length >= 2) {
-        corner1 = tempArr.pop();
-        for (i = 0; i < tempArr.length; i++) {
-            corner2 = tempArr[i];
-            const length = getDistance(corner1, { lat: corner1.lat, lng: corner2.lng }) / 1000;
-            const width = getDistance(corner2, { lat: corner1.lat, lng: corner2.lng }) / 1000;
-            if (length*width <= kmSq) {
-                console.log("Debugging l*w:", length*width, "< 129499");
-                break;
-            }
-        }
-        result.push({ corner1, corner2 })
-        tempArr = tempArr.slice(0,i-1); // retain all data from biggest to largest corner previously
-    }
-
-    return {...result};
-}
-
-export const genSegmentArr = (latLngArr) => {
     let result = [];
     const kmSq = 129499;
     let tempArr = latLngArr;
-    let corner1;
-    let corner2;
-    let length;
-    let width;
-    let i;
-    let prev;
+    let corner1, corner2, length, width, i, prev;
+
     // initial check: assert origin to destination is under 50,000 sq miles.
     const origin = tempArr[0];
     const dest = tempArr[tempArr.length-1];
     const firstl = getDistance(origin, { lat: origin.lat, lng: dest.lng }) / 1000;
     const firstw = getDistance(dest, { lat: origin.lat, lng: dest.lng }) / 1000;
     if (firstl*firstw <= kmSq) {
-        return { 0: origin, 1: dest};
+        return { 0: { corner1: origin, corner2: dest } };
     }
 
-    while (tempArr.length != 0) {
+    while (tempArr.length !== 0) {
         corner1 = tempArr.shift(); // shift shortest corner out from front index
         for (i = 0; i < tempArr.length; i++) {
+            console.log("tempArr length=",tempArr.length);
             corner2 = tempArr[i];
             length = getDistance(corner1, { lat: corner1.lat, lng: corner2.lng }) / 1000;
             width = getDistance(corner2, { lat: corner1.lat, lng: corner2.lng }) / 1000;
+            console.log("debug: l*w:", length*width, "< 129499");
             if (length*width > kmSq) {
-                // console.log("debug: l*w:", length*width, "< 129499");
+                console.log("debug: l*w exceeded:", length*width, "< 129499");
                 corner2 = tempArr[prev];
                 break;
             }
             prev = i;
         }
         result.push({ corner1, corner2 })
-        tempArr = tempArr.slice(i); // retain all bigger data and remove smaller data
+        tempArr = tempArr.slice(i-1); // retain all bigger data and remove smaller data
     }
-    assertSquareMiles(result);
+    result = assertSquareMiles(result);
 
     return {...result};
-}
-
-export const genSegmentArr2 = (queue) => {
-    // given an array of lat lng objects, calculate the largest size under 50,000 square miles
-    // finally return an array containing objects of lat lng object pairs to be fed into mapQuest.
-
-    // from Irvine to Anaheim or Irvine to Riverside there should only be 1 segment returned
-    // from Irvine to Berkeley there should be two!
-    // see apiKeys.js for test link
-
-    const meterSquare = 129499391611;
-    let prev = {};
-    let corner1;
-    let corner2;
-    let segmentArray = [];
-
-    while (queue.length !== 0) {
-        corner1 = queue.shift();
-        console.log("debug corner1: ", corner1);
-        while(queue.length !== 0) {
-            corner2 = queue.shift();
-            console.log("debug corner2: ", corner2);
-            const length = getDistance(corner1, { lat: corner1.lat, lng: corner2.lng });
-            const width = getDistance(corner2, { lat: corner1.lat, lng: corner2.lng });
-            console.log("len/wid: ", length, " ", width);
-            if (length * width <= meterSquare) {
-                prev = corner2;
-                console.log("prev: ", prev);
-            } else {
-                if (!_.isEmpty(prev)) {
-                    console.log("ENTERED");
-                    queue.unshift(corner2);
-                    segmentArray.push({ corner1: corner1, corner2: prev });
-                    break;
-                } // if prev is invalid, skip segment entirely
-            }
-        }
-    }
-    return segmentArray;
 }
 
 // after, call an action creator, passing in the findAreaSegments array and a number assigned to route
