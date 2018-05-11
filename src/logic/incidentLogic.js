@@ -62,20 +62,20 @@ export const genSegmentObj = (latLngArr) => {
             width = getDistance(corner2, { lat: corner1.lat, lng: corner2.lng }) / 1000;
             // console.log("debug: l*w:", length*width, "< 129499");
             if (length*width > kmSq) {
-                console.log("debug: l*w exceeded:", length*width, "< 129499");
+                // console.log("debug: l*w exceeded:", length*width, "< 129499");
                 // dlength and dwidth ensure that the prev value * current value is valid, or else
                 // the algorithm will end prematurely with invalid values.
                 // if dlength * dwidth > kmSq, then the algorithm will skip that bounding box entirely.
                 const dlength = getDistance(corner1, { lat: corner1.lat, lng: tempArr[prev].lng}) / 1000;
                 const dwidth = getDistance(tempArr[prev], { lat: corner1.lat, lng: tempArr[prev].lng }) / 1000;
                 if (dlength*dwidth > kmSq) {
-                    console.log("debug: dl*dw exceeded:", dlength*dwidth, "< 129499");
+                    // console.log("debug: dl*dw exceeded:", dlength*dwidth, "< 129499");
                     corner1 = tempArr.shift(); // overwrite old corner1
                     corner2 = corner1; 
                     // previous corner2 overwritten, don't need.
                     // The next iteration area will be 0 for dlength and dwidth
                 } else {
-                    console.log("debug2: l*w should not exceed:", dlength*dwidth, "< 129499");
+                    // console.log("debug2: l*w should not exceed:", dlength*dwidth, "< 129499");
                     corner2 = tempArr[prev];
                     break;
                 }

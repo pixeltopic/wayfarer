@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import _ from "lodash";
 import { genLatLngQueue, genSegmentObj } from "../logic/incidentLogic.js";
+import { fetchIncidents } from "../actions/actionTypes";
 // import { getDistance } from "geolib";
 
 
@@ -16,11 +17,13 @@ class ShowIncidents extends Component {
         const data = this.props.directionData;
         // const calcTest = genLatLngQueue(data["0"]);
 
-        // const corner1 = calcTest[0];
-        // const corner2 = calcTest[calcTest.length-1];
+        // const corner1 = { lat: 38.644259, lng: -121.378 };
+        // const corner2 = { lat: 40.725200, lng: -111.90465 };
 
-        // const length = getDistance(corner1, { lat: corner1.lat, lng: corner2.lng });
-        // const width = getDistance(corner2, { lat: corner1.lat, lng: corner2.lng });
+        // const length = getDistance(corner1, { lat: corner1.lat, lng: corner2.lng }) / 1000;
+        // const width = getDistance(corner2, { lat: corner1.lat, lng: corner2.lng }) / 1000;
+
+        // console.log("debug: l*w:", length*width, "< 129499");
         // console.log("corner1:",corner1);
         // console.log("corner2:",corner2);
         // console.log("corner3:", { lat: corner1.lat, lng: corner2.lng });
@@ -34,16 +37,38 @@ class ShowIncidents extends Component {
 
     }
 
-    doSegmentObjAction(routeNum, segObj) {
-        // given an object of valid segments, loop through and fire actions to the mapquest API.
-        // if there were alternative routes calculated, make sure to account for those too.
-        // right now there are no differentiation between objects.
-        console.log("WIP");
+    genSegmentObjForAllRoutes() {
+        // returns an object containing the segmented areas for every route.
+        // { 0: {segment object}, 1: ... }
+        const data = this.props.directionData;
+        let result = [];
+        for (let routeNum in data) {
+            const fullRouteLatLngArr = genLatLngQueue(data[routeNum]);
+            const routeSegmentObj = genSegmentObj(fullRouteLatLngArr);
+            result.push(routeSegmentObj);
+        }
+        return {...result};
     }
+
+    updateFullIncidentState() {
+        // given object returned by genSegmentObj, fire actions for every single possible segement
+        // in every route
+        const fullSegmentObj = this.genSegmentObjForAllRoutes();
+        for (let routeNum in fullSegmentObj) {
+            ;
+        }
+    }
+
+    // fetchSingleSegmentData(routeNum, stepNum, segObj) {
+        
+    //     console.log("WIP");
+    // }
 
     render() {
         if (!_.isEmpty(this.props.directionData)) {
-            this.filterLatLongs();
+            // this.filterLatLongs();
+            const fullobj = this.genSegmentObjForAllRoutes();
+            console.log(fullobj);
         }
         return <div />
     }
@@ -53,4 +78,5 @@ function mapStateToProps(state) {
     return { directionData: state.directionData };
 }
 
-export default connect(mapStateToProps)(ShowIncidents);
+// reducer incomplete so cannot use action creator yet.
+export default connect(mapStateToProps, { fetchIncidents })(ShowIncidents);
