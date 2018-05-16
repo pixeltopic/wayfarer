@@ -55,7 +55,9 @@ class ShowIncidents extends Component {
         // in every route
         const fullSegmentObj = this.genSegmentObjForAllRoutes();
         for (let routeNum in fullSegmentObj) {
-            ;
+            for (let stepNum in fullSegmentObj[routeNum]) {
+                this.props.fetchIncidents(routeNum, stepNum, fullSegmentObj[routeNum][stepNum]);
+            }
         }
     }
 
@@ -66,9 +68,11 @@ class ShowIncidents extends Component {
 
     render() {
         if (!_.isEmpty(this.props.directionData)) {
-            // this.filterLatLongs();
-            const fullobj = this.genSegmentObjForAllRoutes();
-            console.log(fullobj);
+            
+            // const fullobj = this.genSegmentObjForAllRoutes();
+            // console.log(fullobj);
+            this.updateFullIncidentState();
+
         }
         return <div />
     }

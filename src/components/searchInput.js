@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
-import { fetchDirections, updateForm } from "../actions/actionTypes";
+import { fetchDirections, updateForm, clearIncidents } from "../actions/actionTypes";
 import { connect } from "react-redux";
 // import { Well } from "react-bootstrap";
 import { Form, FormGroup, ControlLabel, FormControl, Button, Checkbox } from "react-bootstrap";
@@ -83,6 +83,7 @@ class SearchInput extends Component {
         // uses callback from App to force-update parent (App's) state.
         console.log("Form submitted"); 
         // console.log(values);
+        this.props.clearIncidents();
         this.props.fetchDirections(values);
     }
 
@@ -153,7 +154,7 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, { fetchDirections, updateForm })(
+export default connect(mapStateToProps, { fetchDirections, clearIncidents, updateForm })(
     reduxForm({ 
         validate: validate, 
         form: "SearchInputForm",

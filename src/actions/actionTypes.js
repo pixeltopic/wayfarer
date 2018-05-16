@@ -3,10 +3,11 @@ import { MAP_API_KEY, INCIDENTS_API_KEY } from "./apiKeys";
 
 export const FETCH_DIRECTIONS = "fetch_directions";
 export const FETCH_INCIDENTS = "fetch_incidents";
+export const CLEAR_INCIDENTS = "clear_incidents";
 export const FORM_CONTENT = "form_content";
 
 const GOOGLE_ROOT_URL = "https://maps.googleapis.com/maps/api/directions/";
-const MAPQUEST_ROOT_URL = "http://www.mapquestapi.com/traffic/v2/";
+const MAPQUEST_ROOT_URL = "http://www.mapquestapi.com/traffic/v2/incidents";
 const PROXY_URL = "https://cors-anywhere.herokuapp.com/"; // workaround for CORS
 
 // const url = "json?origin=Toronto&destination=Montreal&key=YOUR_API_KEY"
@@ -48,13 +49,25 @@ export function fetchIncidents(routeNum, stepNum, segObj) {
     // given a route number, the step number for that object, and the segment pair object,
     // make the API call for that single segment.
 
-    const MAPQUEST_URL = `${MAPQUEST_ROOT_URL}${INCIDENTS_API_KEY}?key=KEY&boundingBox=${segObj.corner1.lat},${segObj.corner1.lng},${segObj.corner2.lat},${segObj.corner2.lng}&filters=construction,incidents`;
+    const MAPQUEST_URL = `${PROXY_URL}${MAPQUEST_ROOT_URL}?key=${INCIDENTS_API_KEY}&boundingBox=${segObj.corner1.lat},${segObj.corner1.lng},${segObj.corner2.lat},${segObj.corner2.lng}&filters=construction,incidents`;
     const request = axios.get(MAPQUEST_URL);
     
     return {
         type: FETCH_INCIDENTS,
         payload: { routePayload: routeNum, stepPayload: stepNum, reqPayload: request }
     }
+}
+
+export function clearIncidents() {
+    // clears incident state when making a new search
+    return {
+        type: CLEAR_INCIDENTS,
+        payload: {}
+    }
+}
+
+export function fetchLandmarks() {
+    return;
 }
 
 export function fetchOpenWeather() {
