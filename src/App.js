@@ -4,7 +4,7 @@ import './App.css';
 
 import SearchInput from "./components/searchInput";
 import NavBar from "./components/navBar";
-import ShowIncidents from "./components/showIncidents";
+// import ShowIncidents from "./components/showIncidents";
 
 // import { Link } from "react-router-dom";
 import { Well } from "react-bootstrap";
@@ -61,7 +61,7 @@ class App extends Component {
                     <Well>
                         <SearchInput />
                     </Well> 
-                    <ShowIncidents />
+                    
                 </div>
             </div>
          );

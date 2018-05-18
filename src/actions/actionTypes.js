@@ -49,13 +49,14 @@ export function fetchIncidents(routeNum, stepNum, segObj) {
     // given a route number, the step number for that object, and the segment pair object,
     // make the API call for that single segment.
 
-    const MAPQUEST_URL = `${PROXY_URL}${MAPQUEST_ROOT_URL}?key=${INCIDENTS_API_KEY}&boundingBox=${segObj.corner1.lat},${segObj.corner1.lng},${segObj.corner2.lat},${segObj.corner2.lng}&filters=construction,incidents`;
-    const request = axios.get(MAPQUEST_URL);
-    
+    const MAPQUEST_URL = `${PROXY_URL}${MAPQUEST_ROOT_URL}?key=${INCIDENTS_API_KEY}&boundingBox=${segObj.corner1.lat},${segObj.corner1.lng},${segObj.corner2.lat},${segObj.corner2.lng}&filters=construction,incidents,event,congestion`;
+    // const request = axios.get(MAPQUEST_URL);
     return {
         type: FETCH_INCIDENTS,
-        payload: { routePayload: routeNum, stepPayload: stepNum, reqPayload: request }
+        payload: axios.get(MAPQUEST_URL).then(request => ({ request, routePayload: routeNum, stepPayload: stepNum }))
     }
+    // arrow function returns autmatically if it is not wrapped in curly braces.
+    // why this works: https://github.com/redux-utilities/redux-promise/blob/master/src/index.js#L11
 }
 
 export function clearIncidents() {

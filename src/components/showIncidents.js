@@ -1,46 +1,26 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import _ from "lodash";
+import NavBar from "./navBar.js";
 import { genLatLngQueue, genSegmentObj } from "../logic/incidentLogic.js";
 import { fetchIncidents } from "../actions/actionTypes";
 // import { getDistance } from "geolib";
 
+// TODO: create algorithm to clean up data.
 
-// important limitation:
-// only use this class if travel method is driving. this should be handled via conditional on searchInput.js
 class ShowIncidents extends Component {
 
-    filterLatLongs() {
-        // using direction data provided by google maps, create an array of latlongs and return an array
-        // of lat long objects for MapQuest API calls.
-
-        const data = this.props.directionData;
-        // const calcTest = genLatLngQueue(data["0"]);
-
-        // const corner1 = { lat: 38.644259, lng: -121.378 };
-        // const corner2 = { lat: 40.725200, lng: -111.90465 };
-
-        // const length = getDistance(corner1, { lat: corner1.lat, lng: corner2.lng }) / 1000;
-        // const width = getDistance(corner2, { lat: corner1.lat, lng: corner2.lng }) / 1000;
-
-        // console.log("debug: l*w:", length*width, "< 129499");
-        // console.log("corner1:",corner1);
-        // console.log("corner2:",corner2);
-        // console.log("corner3:", { lat: corner1.lat, lng: corner2.lng });
-        // console.log("len/wid:", length, width);
-
-        for (let routeNum in data) {
-            const calcTest = genLatLngQueue(data[routeNum]);
-            console.log(calcTest);
-            console.log(genSegmentObj(calcTest));
+    componentDidMount() {
+        if (!_.isEmpty(this.props.directionData) && _.isEmpty(this.props.incidentsData)) {
+            // if (this.props.directionData) is DRIVING, THEN do this.
+            // console.log to make sure it won't infinite loop if it's driving.
+            this.updateFullIncidentState(this.props.directionData);
         }
-
     }
 
-    genSegmentObjForAllRoutes() {
+    genSegmentObjForAllRoutes(data) {
         // returns an object containing the segmented areas for every route.
         // { 0: {segment object}, 1: ... }
-        const data = this.props.directionData;
         let result = [];
         for (let routeNum in data) {
             const fullRouteLatLngArr = genLatLngQueue(data[routeNum]);
@@ -50,10 +30,10 @@ class ShowIncidents extends Component {
         return {...result};
     }
 
-    updateFullIncidentState() {
+    updateFullIncidentState(data) {
         // given object returned by genSegmentObj, fire actions for every single possible segement
         // in every route
-        const fullSegmentObj = this.genSegmentObjForAllRoutes();
+        const fullSegmentObj = this.genSegmentObjForAllRoutes(data);
         for (let routeNum in fullSegmentObj) {
             for (let stepNum in fullSegmentObj[routeNum]) {
                 this.props.fetchIncidents(routeNum, stepNum, fullSegmentObj[routeNum][stepNum]);
@@ -61,25 +41,25 @@ class ShowIncidents extends Component {
         }
     }
 
-    // fetchSingleSegmentData(routeNum, stepNum, segObj) {
-        
-    //     console.log("WIP");
-    // }
-
     render() {
-        if (!_.isEmpty(this.props.directionData)) {
+        // if (!_.isEmpty(this.props.directionData) && _.isEmpty(this.props.incidentsData)) {
             
-            // const fullobj = this.genSegmentObjForAllRoutes();
-            // console.log(fullobj);
-            this.updateFullIncidentState();
-
+        //     // if (this.props.directionData) is DRIVING, THEN do this. actually, use SHowDirections formselector travelmode === driving
+        //     // console.log to make sure it won't infinite loop if it's driving.
+        //     this.updateFullIncidentState(this.props.directionData);
+        // }
+        if ( !_.isEmpty(this.props.incidentsData)) {
+            console.log(this.props.incidentsData);
         }
-        return <div />
+        return (<div>
+            <NavBar/>
+            Blah blah
+            </div>);
     }
 }
 
 function mapStateToProps(state) {
-    return { directionData: state.directionData };
+    return { directionData: state.directionData, incidentsData: state.incidentsData };
 }
 
 // reducer incomplete so cannot use action creator yet.

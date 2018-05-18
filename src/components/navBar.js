@@ -14,6 +14,9 @@ export default (props) => {
                 <LinkContainer to="/navi">
                     <NavItem eventKey={1}>Get Directions</NavItem>
                 </LinkContainer>
+                <LinkContainer to="/incidents">
+                    <NavItem eventKey={2}>Get Incidents</NavItem>
+                </LinkContainer>
             </Nav>
         </Navbar>
     );

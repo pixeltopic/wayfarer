@@ -17,14 +17,14 @@ export const genLatLngQueue = (route) => {
 export const assertSquareMiles = (arr) => {
     // given array of corner pairs, assert they are all under 50,000 square miles and not equal to zero.
     
-    arr.forEach((box) => {
+    /*arr.forEach((box) => {
         const { corner1, corner2 } = box;
         // const corner1 = box.corner1;
         // const corner2 = box.corner2;
         const length = getDistance(corner1, { lat: corner1.lat, lng: corner2.lng }) / 1000;
         const width = getDistance(corner2, { lat: corner1.lat, lng: corner2.lng }) / 1000;
         console.log("Debugging l*w:", length*width, "< 129499");
-    });
+    });*/
 
     const newArr = arr.filter((box) => {
         const { corner1, corner2 } = box;
