@@ -10,9 +10,9 @@ export default (state = initialState.state, action) => {
             const { routePayload, stepPayload, request } = action.payload;
             let cleanState = { ...state };
             if (cleanState[routePayload]) {
-                cleanState[routePayload] = {...cleanState[routePayload], [stepPayload]: request.data };
+                cleanState[routePayload] = {...cleanState[routePayload], [stepPayload]: request.data.incidents };
             } else {
-                cleanState[routePayload] = { [stepPayload]: request.data };
+                cleanState[routePayload] = { [stepPayload]: request.data.incidents };
             }
             // console.log(cleanState); // next, make it only calls upon form submission.
             return cleanState;

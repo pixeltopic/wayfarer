@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import _ from "lodash";
 import NavBar from "./navBar.js";
-import { genLatLngQueue, genSegmentObj } from "../logic/incidentLogic.js";
+import { updateFullIncidentState } from "../logic/incidentLogic.js";
 import { fetchIncidents } from "../actions/actionTypes";
+import { formValueSelector } from "redux-form";
 // import { getDistance } from "geolib";
 
 // TODO: create algorithm to clean up data.
@@ -12,44 +13,18 @@ class ShowIncidents extends Component {
 
     componentDidMount() {
         if (!_.isEmpty(this.props.directionData) && _.isEmpty(this.props.incidentsData)) {
-            // if (this.props.directionData) is DRIVING, THEN do this.
-            // console.log to make sure it won't infinite loop if it's driving.
-            this.updateFullIncidentState(this.props.directionData);
-        }
-    }
-
-    genSegmentObjForAllRoutes(data) {
-        // returns an object containing the segmented areas for every route.
-        // { 0: {segment object}, 1: ... }
-        let result = [];
-        for (let routeNum in data) {
-            const fullRouteLatLngArr = genLatLngQueue(data[routeNum]);
-            const routeSegmentObj = genSegmentObj(fullRouteLatLngArr);
-            result.push(routeSegmentObj);
-        }
-        return {...result};
-    }
-
-    updateFullIncidentState(data) {
-        // given object returned by genSegmentObj, fire actions for every single possible segement
-        // in every route
-        const fullSegmentObj = this.genSegmentObjForAllRoutes(data);
-        for (let routeNum in fullSegmentObj) {
-            for (let stepNum in fullSegmentObj[routeNum]) {
-                this.props.fetchIncidents(routeNum, stepNum, fullSegmentObj[routeNum][stepNum]);
+            if (this.props.isDriving === "driving") {
+                updateFullIncidentState(this.props.directionData, this.props.fetchIncidents);
+            } else {
+                console.log("travelMode was not set to driving, so will not search incidents.")
+                console.log("travelMode is currently", this.props.isDriving);
             }
         }
     }
 
     render() {
-        // if (!_.isEmpty(this.props.directionData) && _.isEmpty(this.props.incidentsData)) {
-            
-        //     // if (this.props.directionData) is DRIVING, THEN do this. actually, use SHowDirections formselector travelmode === driving
-        //     // console.log to make sure it won't infinite loop if it's driving.
-        //     this.updateFullIncidentState(this.props.directionData);
-        // }
         if ( !_.isEmpty(this.props.incidentsData)) {
-            console.log(this.props.incidentsData);
+            console.log("showIncidents render():", this.props.incidentsData);
         }
         return (<div>
             <NavBar/>
@@ -59,7 +34,12 @@ class ShowIncidents extends Component {
 }
 
 function mapStateToProps(state) {
-    return { directionData: state.directionData, incidentsData: state.incidentsData };
+    const selector = formValueSelector("SearchInputForm");
+    return { 
+        directionData: state.directionData, 
+        incidentsData: state.incidentsData,
+        isDriving: selector(state, "travelMode")
+    };
 }
 
 // reducer incomplete so cannot use action creator yet.

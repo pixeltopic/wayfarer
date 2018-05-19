@@ -1,7 +1,7 @@
 // import _ from "lodash";
 import { getDistance } from "geolib";
 
-export const genLatLngQueue = (route) => {
+const genLatLngQueue = (route) => {
     // given single route object, return an array of {lat, lng} from every step.
     const stepArray = route["legs"]["0"]["steps"];
     let latLngQueue = [];
@@ -14,7 +14,7 @@ export const genLatLngQueue = (route) => {
     return latLngQueue;
 }
 
-export const assertSquareMiles = (arr) => {
+const assertSquareMiles = (arr) => {
     // given array of corner pairs, assert they are all under 50,000 square miles and not equal to zero.
     
     /*arr.forEach((box) => {
@@ -36,7 +36,7 @@ export const assertSquareMiles = (arr) => {
     return newArr;
 }
 
-export const genSegmentObj = (latLngArr) => {
+const genSegmentObj = (latLngArr) => {
     // returns an object with int keys and a corner1 and corner2 attribute which then contains 
     // latlngs for a bounding box. The bounding box is the fewest number of < 50k square mile segments.
 
@@ -88,6 +88,51 @@ export const genSegmentObj = (latLngArr) => {
     result = assertSquareMiles(result);
 
     return {...result};
+}
+
+const genSegmentObjForAllRoutes = (data) => {
+    // returns an object containing the segmented areas for every route.
+    // { 0: {segment object}, 1: ... }
+    let result = [];
+    for (let routeNum in data) {
+        const fullRouteLatLngArr = genLatLngQueue(data[routeNum]);
+        const routeSegmentObj = genSegmentObj(fullRouteLatLngArr);
+        result.push(routeSegmentObj);
+    }
+    return {...result};
+}
+
+export const updateFullIncidentState = (data, callback) => {
+    // given object returned by genSegmentObj, fire actions for every single possible segement
+    // in every route
+    // callback will be the fetchIncidents action creator.
+    const fullSegmentObj = genSegmentObjForAllRoutes(data);
+    for (let routeNum in fullSegmentObj) {
+        for (let stepNum in fullSegmentObj[routeNum]) {
+            callback(routeNum, stepNum, fullSegmentObj[routeNum][stepNum]);
+        }
+    }
+}
+
+const filterRouteIncident = (routeNum, directionData, routeIncidents) => {
+    // given routeNum (an integer associated with route) and routeIncidents (an object of segment arrs)
+    // and directionData[routeNum]["legs"]["0"]["steps"] with is an array of steps,
+    // access array index [i][end_location] (and [start_location]) first check which segment it's located in.
+    // then check every distance of the data within that segment.
+
+
+
+}
+
+export const filterAllRouteIncidents = (incidentObject) => {
+    // given incident object from state, filters out any irrelevant incidents that is over 5000 meters
+    // away from a lat lng of a step within that incident's bounding box.
+    // also remove any priority incidents that are under 2.
+    // incidentObject structure:
+    // { routeNum: { segmentstepNum: [array of incidents in segment] , segmentstepNum2: []}, routeNum2: }
+
+    // loop through 
+
 }
 
 // after, call an action creator, passing in the findAreaSegments array and a number assigned to route

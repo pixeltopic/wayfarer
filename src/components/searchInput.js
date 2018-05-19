@@ -158,7 +158,8 @@ export default connect(mapStateToProps, { fetchDirections, clearIncidents, updat
     reduxForm({ 
         validate: validate, 
         form: "SearchInputForm",
-        enableReinitialize : true
+        enableReinitialize : true,
+        destroyOnUnmount : false
     })(SearchInput)
 );
 
