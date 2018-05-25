@@ -7,7 +7,7 @@ import { fetchIncidents } from "../actions/actionTypes";
 import { formValueSelector } from "redux-form";
 // import { getDistance } from "geolib";
 
-// TODO: create algorithm to clean up data.
+// TODO: add button to refresh page, or perhaps add componentDidUpdate with the same code as didMount?
 
 class ShowIncidents extends Component {
 

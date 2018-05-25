@@ -14,6 +14,23 @@ const genLatLngQueue = (route) => {
     return latLngQueue;
 }
 
+const genUniqueLatLngQueue = (route) => {
+    // given single route object, return an array of {lat, lng} from every step but with uniqueness.
+    const stepArray = route["legs"]["0"]["steps"];
+    let latLngQueue = [];
+
+    stepArray.forEach((step) => {
+        if (latLngQueue.find((latLngPair) => latLngPair.lat === step.start_location.lat && latLngPair.lng === step.start_location.lng) === undefined) {
+            latLngQueue.push(step.start_location);
+        }
+        if (latLngQueue.find((latLngPair) => latLngPair.lat === step.end_location.lat && latLngPair.lng === step.end_location.lng) === undefined) {
+            latLngQueue.push(step.end_location);
+        }
+    });
+        
+    return latLngQueue;
+}
+
 const assertSquareMiles = (arr) => {
     // given array of corner pairs, assert they are all under 50,000 square miles and not equal to zero.
     
@@ -109,31 +126,13 @@ export const updateFullIncidentState = (data, callback) => {
     const fullSegmentObj = genSegmentObjForAllRoutes(data);
     for (let routeNum in fullSegmentObj) {
         for (let stepNum in fullSegmentObj[routeNum]) {
-            callback(routeNum, stepNum, fullSegmentObj[routeNum][stepNum]);
+            // send the entire latlng array into the action,
+            // where the reducer will do the calculations to filter incidents!
+            callback(routeNum, stepNum, fullSegmentObj[routeNum][stepNum], genUniqueLatLngQueue(data[routeNum]));
         }
     }
 }
 
-const filterRouteIncident = (routeNum, directionData, routeIncidents) => {
-    // given routeNum (an integer associated with route) and routeIncidents (an object of segment arrs)
-    // and directionData[routeNum]["legs"]["0"]["steps"] with is an array of steps,
-    // access array index [i][end_location] (and [start_location]) first check which segment it's located in.
-    // then check every distance of the data within that segment.
-
-
-
-}
-
-export const filterAllRouteIncidents = (incidentObject) => {
-    // given incident object from state, filters out any irrelevant incidents that is over 5000 meters
-    // away from a lat lng of a step within that incident's bounding box.
-    // also remove any priority incidents that are under 2.
-    // incidentObject structure:
-    // { routeNum: { segmentstepNum: [array of incidents in segment] , segmentstepNum2: []}, routeNum2: }
-
-    // loop through 
-
-}
 
 // after, call an action creator, passing in the findAreaSegments array and a number assigned to route
     // eg. state = { 0: { segment0: {mapquestData}, segment1: {data},...} 1: {...}}

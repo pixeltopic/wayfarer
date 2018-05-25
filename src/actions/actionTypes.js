@@ -45,7 +45,7 @@ export function fetchDirections({ originInput, destinationInput, travelMode, alt
     };
 }
 
-export function fetchIncidents(routeNum, stepNum, segObj) {
+export function fetchIncidents(routeNum, stepNum, segObj, latLngData) {
     // given a route number, the step number for that object, and the segment pair object,
     // make the API call for that single segment.
 
@@ -53,7 +53,7 @@ export function fetchIncidents(routeNum, stepNum, segObj) {
     // const request = axios.get(MAPQUEST_URL);
     return {
         type: FETCH_INCIDENTS,
-        payload: axios.get(MAPQUEST_URL).then(request => ({ request, routePayload: routeNum, stepPayload: stepNum }))
+        payload: axios.get(MAPQUEST_URL).then(request => ({ request, routePayload: routeNum, stepPayload: stepNum, latLngQueue: latLngData, segObj: segObj }))
     }
     // arrow function returns autmatically if it is not wrapped in curly braces.
     // why this works: https://github.com/redux-utilities/redux-promise/blob/master/src/index.js#L11
