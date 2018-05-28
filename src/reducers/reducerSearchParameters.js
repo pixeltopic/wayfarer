@@ -1,10 +1,11 @@
 import initialState from "./initialState";
-import { FORM_CONTENT } from "../actions/actionTypes";
+import { SEARCH_PARAMETERS } from "../actions/actionTypes";
 
 export default function(state = initialState.state, action) {
     switch (action.type) {
-        case FORM_CONTENT:
+        case SEARCH_PARAMETERS:
             // returns an object with stored data from the form
+            console.log("updateSearchParameters:",action.payload);
             return action.payload;
 
         default:

@@ -4,7 +4,7 @@ import { MAP_API_KEY, INCIDENTS_API_KEY } from "./apiKeys";
 export const FETCH_DIRECTIONS = "fetch_directions";
 export const FETCH_INCIDENTS = "fetch_incidents";
 export const CLEAR_INCIDENTS = "clear_incidents";
-export const FORM_CONTENT = "form_content";
+export const SEARCH_PARAMETERS = "search_parameters";
 
 const GOOGLE_ROOT_URL = "https://maps.googleapis.com/maps/api/directions/";
 const MAPQUEST_ROOT_URL = "http://www.mapquestapi.com/traffic/v2/incidents";
@@ -12,10 +12,13 @@ const PROXY_URL = "https://cors-anywhere.herokuapp.com/"; // workaround for CORS
 
 // const url = "json?origin=Toronto&destination=Montreal&key=YOUR_API_KEY"
 
-export function updateForm(formContent){
+export function updateSearchParameters({ travelMode, alternativeRoute, unit }){
+    // reduxForm reinitializes travelMode, alternativeRoute, and unit on re-render, so
+    // this action saves the inputted form parameters into a state on form submit.
+
     return {
-        type: FORM_CONTENT,
-        payload: formContent
+        type: SEARCH_PARAMETERS,
+        payload: { travelMode, alternativeRoute, unit }
     };
 }
 

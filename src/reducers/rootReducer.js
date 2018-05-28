@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
 import reducerDirections from "./reducerDirections";
-import FormContent from "./reducer_form_content";
+import reducerSearchParameters from "./reducerSearchParameters";
 import reducerIncidents from "./reducerIncidents";
 import { reducer as formReducer } from "redux-form";
 
@@ -13,7 +13,7 @@ state = {
 */
 
 const rootReducer = combineReducers({
-    formContent: FormContent,
+    searchParameters: reducerSearchParameters,
     directionData: reducerDirections,
     form: formReducer,
     incidentsData: reducerIncidents
