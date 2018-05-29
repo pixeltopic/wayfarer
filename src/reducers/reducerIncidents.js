@@ -9,7 +9,7 @@ export default (state = initialState.state, action) => {
             // note: action.payload.data: payload is produced by redux promise middleware.
             // console.log(action); // testing to see if action returns correct object with nested promise
             // console.log(action.routePayload);
-            const { routePayload, stepPayload, request, latLngQueue, segObj } = action.payload;
+            const { routePayload, request, latLngQueue, segObj } = action.payload;
             // right now we have: routePayload: a number identifying route
             // stepPayload: a number identifying a segment step in a route
             // request: the resolved promise from MapQuest API

@@ -1,5 +1,6 @@
 import React from "react";
 import { decodePolyline, calcCenterWithBounds } from "../logic/mapLogic.js";
+import fontawesome from "fontawesome-markers";
 import { withScriptjs, withGoogleMap, GoogleMap, Marker, Polyline } from "react-google-maps";
 import { MAP_API_KEY } from "../actions/apiKeys";
 
@@ -34,12 +35,28 @@ const PolylineMapComponent = withScriptjs(withGoogleMap((props) =>
     </GoogleMap>
 ));
 
+const icon = {
+    path: fontawesome.MAP_PIN,
+    fillColor: '#E32831',
+    fillOpacity: 1,
+    strokeWeight: 0,
+    scale: 0.65
+}
+
+const makeMarker = (key, position, icon) => {
+    return (
+        <Marker key={key} position={position} icon={icon} />
+    );
+}
+
 export const PolylineMap = (props) => {
     // takes routeBounds and overviewPolyine props given info from a this.props.directionData route
     // and renders map
     const decodedPolyline = decodePolyline(props.overviewPolyline);
-    const markerArray = [<Marker key={1} position={decodedPolyline[0]} />, 
-    <Marker key={2} position={decodedPolyline[decodedPolyline.length-1]} />];
+    // const markerArray = [<Marker key={1} position={decodedPolyline[0]} icon={icon} />, 
+    // <Marker key={2} position={decodedPolyline[decodedPolyline.length-1]} icon={icon} />];
+    const markerArray = [makeMarker(1,decodedPolyline[0],icon), 
+    makeMarker(2,decodedPolyline[decodedPolyline.length-1],icon)];
     return (
         <PolylineMapComponent
             isMarkerShown
