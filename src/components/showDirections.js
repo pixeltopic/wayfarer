@@ -4,7 +4,9 @@ import _ from "lodash";
 import { fetchDirections } from "../actions/actionTypes";
 // import { formValueSelector } from "redux-form";
 import NavBar from "./navBar.js";
-import { Tabs, Tab, Panel, ListGroup, ListGroupItem, Alert } from "react-bootstrap";
+import { PolylineMap } from "./showMap.js";
+import { Tabs, Tab, Panel, ListGroup, ListGroupItem, Alert, PageHeader } from "react-bootstrap";
+import "./showDirections.css";
 
 // TODO: add origin/destination to each route tab for more detail along with any other useful details.
 
@@ -47,6 +49,9 @@ class ShowDirections extends Component {
             key++;
             return (
                 <Tab key={key} eventKey={key} title={`Route ${key+1}`}>
+                    <PageHeader>Route Visualization</PageHeader>
+                    <PolylineMap overviewPolyline={route.overview_polyline.points} routeBounds={route.bounds}/>
+                    <PageHeader>Route Directions</PageHeader>
                     {this.generateSteps(route["legs"]["0"]["steps"])}
                 </Tab>
             );
@@ -80,7 +85,7 @@ class ShowDirections extends Component {
         return (
             <div>
                 <NavBar />
-                <Panel>
+                <Panel className="Direction-body">
                     <Panel.Body> 
                         {this.generateTabs()}
                     </Panel.Body>
