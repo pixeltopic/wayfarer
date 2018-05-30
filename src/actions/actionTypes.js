@@ -12,13 +12,13 @@ const PROXY_URL = "https://cors-anywhere.herokuapp.com/"; // workaround for CORS
 
 // const url = "json?origin=Toronto&destination=Montreal&key=YOUR_API_KEY"
 
-export function updateSearchParameters({ travelMode, alternativeRoute, unit }){
+export function updateSearchParameters({ travelMode, alternativeRoute, unit, originInput, destinationInput }){
     // reduxForm reinitializes travelMode, alternativeRoute, and unit on re-render, so
     // this action saves the inputted form parameters into a state on form submit.
 
     return {
         type: SEARCH_PARAMETERS,
-        payload: { travelMode, alternativeRoute, unit }
+        payload: { travelMode, alternativeRoute, unit, originInput, destinationInput }
     };
 }
 

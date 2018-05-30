@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import logo from "./assets/bonfire_logo.gif";
 import './App.css';
 
 import SearchInput from "./components/searchInput";
@@ -58,9 +58,11 @@ class App extends Component {
                 </header>
                 <div>
                     <NavBar />
-                    <Well>
-                        <SearchInput />
-                    </Well> 
+                    <div className="App-body">
+                        <Well>
+                            <SearchInput />
+                        </Well>
+                    </div>
                     
                 </div>
             </div>

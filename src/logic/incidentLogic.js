@@ -1,4 +1,3 @@
-// import _ from "lodash";
 import { getDistance } from "geolib";
 
 const genLatLngQueue = (route) => {
@@ -132,19 +131,3 @@ export const updateFullIncidentState = (data, callback) => {
         }
     }
 }
-
-
-// after, call an action creator, passing in the findAreaSegments array and a number assigned to route
-    // eg. state = { 0: { segment0: {mapquestData}, segment1: {data},...} 1: {...}}
-    // (note for the future: if 0:, 1:, 2: etc already exist in the state, don't make API calls again!)
-    // (this also means that upon making a new searchInput, there must be an action to reset state to {})
-
-    // this data in the outermost key is synchronized to the findAreaSegments array.
-    // load this data to the component using componentWillReceiveProps
-
-    // in a new method, calculate distance of incidents corresponding to the segment data, filter out
-    // any that are irrelevant.
-
-    // put these relevant incidents into an array and render them into their corresponding route tab
-    // tabs will be assigned 0, 1, 2, etc so make sure to render the correct array from state
-    // when changing each tab

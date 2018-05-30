@@ -1,25 +1,21 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import _ from "lodash";
-import { fetchDirections } from "../actions/actionTypes";
 // import { formValueSelector } from "redux-form";
 import NavBar from "./navBar.js";
 import { PolylineMap } from "./showMap.js";
-import { Tabs, Tab, Panel, ListGroup, ListGroupItem, Alert, PageHeader } from "react-bootstrap";
+import { Tabs, Tab, Panel, ListGroup, ListGroupItem, Alert, PageHeader, Jumbotron } from "react-bootstrap";
 import "./showDirections.css";
+import banner from "../assets/direction_banner.gif";
 
 // TODO: add origin/destination to each route tab for more detail along with any other useful details.
 
-// This component displays the STEPS from origin to destination.
 class ShowDirections extends Component {
-    // componentDidMount() {
-    //     this.props.fetchDirections();
-    // }
 
     generateSteps(stepArr) {
         // given an array of steps, creates a list with properly formatted directions/distance/time
         // result of this function will be the data of a tab.
-        let key = -1; // first key starts at 0
+        let key = 0; // first key starts at 0
         const listContents = stepArr.map(
             (step) => {
                 const dist = step.distance.text;
@@ -40,10 +36,9 @@ class ShowDirections extends Component {
     }
 
     generateTabs() {
-
-        for (let routenum in this.props.directionData) {
-            console.log(this.props.directionData[routenum]);
-        }
+        // for (let routenum in this.props.directionData) {
+        //     console.log(this.props.directionData[routenum]);
+        // }
         let key = -1; // first key begins at 0
         const tabContents = _.map(this.props.directionData, (route) => {
             key++;
@@ -70,7 +65,6 @@ class ShowDirections extends Component {
     render() {
         console.log(this.props.directionData);
         if (_.isEmpty(this.props.directionData)) {
-            console.log("Flagged"); // put some prettier error message here later
             return (
                 <div>
                     <NavBar />
@@ -80,12 +74,27 @@ class ShowDirections extends Component {
                 </div>
             );
         }
-        //this.generateTabs();
-        //console.log(this.props.originInput, ">>", this.props.destinationInput);
+        const routeCount = Object.getOwnPropertyNames(this.props.directionData).length;
+        const { originInput, destinationInput } = this.props.searchParameters;
+        const jumboStyle = {
+            backgroundImage: `linear-gradient(rgba(46, 43, 43, 0.4), rgba(20, 35, 62, 0.4)), url(${banner})`,
+            backgroundPosition: "center",
+            backgroundSize: "cover",
+            textAlign: "center"
+        }
+        const textStyle = {
+            color: "white"
+        }
         return (
             <div>
                 <NavBar />
                 <Panel className="Direction-body">
+                    <Jumbotron style={jumboStyle} > 
+                        <h1 style={textStyle}>Route Directions</h1>
+                        <p style={textStyle}>
+                            Looking for {routeCount} {routeCount === 1 ? "route" : "routes"} from {originInput} to {destinationInput}.
+                        </p>
+                    </Jumbotron>
                     <Panel.Body> 
                         {this.generateTabs()}
                     </Panel.Body>
@@ -96,11 +105,12 @@ class ShowDirections extends Component {
 }
 
 function mapStateToProps(state) {
-    //const selector = formValueSelector("SearchInputForm");
-    return { directionData: state.directionData };
-    //return { directionData: state.directionData, originInput: selector(state, "originInput"), 
-    //destinationInput: selector(state, "destinationInput") };
+    // const selector = formValueSelector("SearchInputForm");
+    return { directionData: state.directionData, searchParameters: state.searchParameters };
+    // return { directionData: state.directionData, 
+        // originInput: selector(state, "originInput"), 
+        // destinationInput: selector(state, "destinationInput") };
 }
 
 // second parameter of connect is mapDispatchToProps
-export default connect(mapStateToProps, { fetchDirections })(ShowDirections);
+export default connect(mapStateToProps)(ShowDirections);

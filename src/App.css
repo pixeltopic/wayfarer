@@ -3,15 +3,17 @@
 }
 
 .App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+  height: 130px;
 }
 
 .App-header {
   background-color: #222;
-  height: 150px;
+  height: 210px;
   padding: 20px;
   color: white;
+  background-image: linear-gradient(rgba(46, 43, 43, 0.4), rgba(20, 35, 62, 0.4)), url("./assets/header.png");
+  background-position: center;
+  background-size: cover;
 }
 
 .App-title {
@@ -22,7 +24,8 @@
   font-size: large;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.App-body {
+  width: 80%;
+  margin: auto;
 }
+

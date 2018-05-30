@@ -1,3 +1,10 @@
+body{
+    background-image: url("../assets/bg.png");
+    background-repeat: repeat-x;
+    background-attachment: fixed;
+    background-color: #141724;
+}
+
 .Direction-body {
     width: 90%;
     margin: auto;
