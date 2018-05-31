@@ -26,9 +26,9 @@ export default (state = initialState.state, action) => {
             // then put the filtered incidents
             // into the state value where request.data.incidents used to be
 
-            console.log("latLngQueue:", latLngQueue);
-            console.log("associated segment:", segObj);
-            console.log("original incidents:", request.data.incidents);
+            // console.log("latLngQueue:", latLngQueue);
+            // console.log("associated segment:", segObj);
+            // console.log("original incidents:", request.data.incidents);
 
             const segObjBoundingBox = getBoundingBox(
                 [{ lat: segObj.corner1.lat, lon: segObj.corner1.lng }, 
@@ -40,7 +40,7 @@ export default (state = initialState.state, action) => {
                 return insideBoundingBox({lat: step.lat, lon: step.lng}, segObjBoundingBox);
             });
 
-            console.log("new associated segment:", segObjBoundingBox);
+            // console.log("new associated segment:", segObjBoundingBox);
 
             const filteredIncidents = request.data.incidents.filter((incident) => {
                 // if incident is within 2000 meters of any step, retain it.
@@ -52,7 +52,7 @@ export default (state = initialState.state, action) => {
                 return false;
             });
 
-            console.log("filtered latLngQueue:", filteredSteps);
+            // console.log("filtered latLngQueue:", filteredSteps);
             console.log("filtered incidents:", filteredIncidents);
 
             let cleanState = { ...state };

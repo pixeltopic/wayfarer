@@ -2,12 +2,16 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import _ from "lodash";
 import NavBar from "./navBar.js";
+import { IncidentPolylineMap } from "./showMap.js";
 import { updateFullIncidentState } from "../logic/incidentLogic.js";
 import { fetchIncidents } from "../actions/actionTypes";
 // import { formValueSelector } from "redux-form";
-import { Tabs, Tab, Panel, ListGroup, ListGroupItem, Alert, Label } from "react-bootstrap";
+import { Tabs, Tab, Panel, ListGroup, ListGroupItem, Alert, Label, PageHeader, Jumbotron } from "react-bootstrap";
+import "./showIncidents.css";
+import banner from "../assets/incidents_banner.gif";
 
 // TODO: add button to refresh page, or perhaps add componentDidUpdate with the same code as didMount?
+// Add a LEGEND displaying what each marker on the google maps means.
 
 const checkType = (num) => {
     switch(num) {
@@ -82,6 +86,12 @@ class ShowIncidents extends Component {
             key++;
             return (
                 <Tab key={key} eventKey={key} title={`Route ${key+1}`}>
+                    <PageHeader>Incident Visualization</PageHeader>
+                    <IncidentPolylineMap 
+                    overviewPolyline={this.props.directionData[key]["overview_polyline"]["points"]} 
+                    routeBounds={this.props.directionData[key]["bounds"]}
+                    incidentsArray={route} />
+                    <PageHeader>Route Incidents</PageHeader>
                     {this.generateIncidents(route)}
                 </Tab>
             );
@@ -117,10 +127,30 @@ class ShowIncidents extends Component {
             }
         }
         console.log("showIncidents render():", this.props.incidentsData);
+        const { originInput, destinationInput } = this.props.searchParameters;
+        let incidentsCount = 0;
+        for (let i in this.props.incidentsData) {
+            incidentsCount += this.props.incidentsData[i].length;
+        }
+        const jumboStyle = {
+            backgroundImage: `linear-gradient(rgba(46, 43, 43, 0.4), rgba(20, 35, 62, 0.4)), url(${banner})`,
+            backgroundPosition: "center",
+            backgroundSize: "cover",
+            textAlign: "center"
+        }
+        const textStyle = {
+            color: "white"
+        }
         return (
             <div>
                 <NavBar/>
-                <Panel>
+                <Panel className="Incidents-body">
+                    <Jumbotron style={jumboStyle} > 
+                        <h1 style={textStyle}>Route Incidents</h1>
+                        <p style={textStyle}>
+                            Found {incidentsCount} total incidents in all routes from {originInput} to {destinationInput}.
+                        </p>
+                    </Jumbotron>
                     <Panel.Body> 
                         {this.generateTabs()}
                     </Panel.Body>
