@@ -44,7 +44,7 @@ class ShowIncidents extends Component {
                 updateFullIncidentState(this.props.directionData, this.props.fetchIncidents);
             } else {
                 console.log("travelMode was not set to driving, so will not search incidents.")
-                console.log("travelMode is currently", this.props.isDriving);
+                // console.log("travelMode is currently", this.props.isDriving);
             }
         }
     }
