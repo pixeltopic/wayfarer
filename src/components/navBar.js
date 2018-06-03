@@ -11,11 +11,14 @@ export default (props) => {
                 </LinkContainer>  
             </Navbar.Header>
             <Nav>
-                <LinkContainer to="/navi">
+                <LinkContainer to="/directions">
                     <NavItem eventKey={1}>Get Directions</NavItem>
                 </LinkContainer>
                 <LinkContainer to="/incidents">
                     <NavItem eventKey={2}>Get Incidents</NavItem>
+                </LinkContainer>
+                <LinkContainer to="/places">
+                    <NavItem eventKey={3}>Get Places</NavItem>
                 </LinkContainer>
             </Nav>
         </Navbar>

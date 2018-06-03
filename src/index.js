@@ -15,6 +15,7 @@ import './index.css';
 import App from './App';
 import ShowDirections from "./components/showDirections.js";
 import ShowIncidents from "./components/showIncidents.js";
+import ShowPlaces from "./components/showPlaces.js";
 
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import registerServiceWorker from './registerServiceWorker';
@@ -31,8 +32,9 @@ ReactDOM.render(
         <BrowserRouter>
             <div>
                 <Switch>
-                    <Route path="/navi" component={ShowDirections} />
+                    <Route path="/directions" component={ShowDirections} />
                     <Route path="/incidents" component={ShowIncidents} />
+                    <Route path="/places" component={ShowPlaces} />
                     <Route path="/" component={App} />
                 </Switch>
             </div>
