@@ -64,7 +64,7 @@ function validate(values) {
     const errors = {};
 
     if (!values.originInput) {
-        errors.originInput = "Enter a valid origin."
+        errors.originInput = "Enter a valid origin.";
     }
 
     if (!values.destinationInput) {
@@ -72,7 +72,7 @@ function validate(values) {
     }
 
     if (values.travelMode !== "walking" && values.avoidIndoor === true) {
-        errors.travelMode = "You can only avoid indoor routes if you are walking."
+        errors.travelMode = "You can only avoid indoor routes if you are walking.";
     }
 
     return errors;

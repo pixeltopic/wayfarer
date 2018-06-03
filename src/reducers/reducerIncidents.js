@@ -43,7 +43,7 @@ export default (state = initialState.state, action) => {
             // console.log("new associated segment:", segObjBoundingBox);
 
             const filteredIncidents = request.data.incidents.filter((incident) => {
-                // if incident is within 2000 meters of any step, retain it.
+                // if incident is within 5000 meters of any step, retain it.
                 for (let i = 0; i < filteredSteps.length; i++) {
                     if (getDistance({lat: filteredSteps[i].lat, lng: filteredSteps[i].lng}, incident) <= 5000) {
                         return true;
@@ -53,7 +53,7 @@ export default (state = initialState.state, action) => {
             });
 
             // console.log("filtered latLngQueue:", filteredSteps);
-            console.log("filtered incidents:", filteredIncidents);
+            // console.log("filtered incidents:", filteredIncidents);
 
             let cleanState = { ...state };
             if (cleanState[routePayload]) {

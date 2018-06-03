@@ -33,7 +33,7 @@ const checkSeverity = (num) => {
 
 const checkImpacting = (bool) => {
     if (bool) { return (<Label bsStyle="warning">Impacting Traffic</Label>); }
-    return (<div />);
+    return (null);
 }
 
 class ShowIncidents extends Component {
@@ -43,7 +43,7 @@ class ShowIncidents extends Component {
             if (this.props.searchParameters.travelMode === "driving") {
                 updateFullIncidentState(this.props.directionData, this.props.fetchIncidents);
             } else {
-                console.log("travelMode was not set to driving, so will not search incidents.")
+                console.log("travelMode was not set to driving, so will not search incidents.");
                 // console.log("travelMode is currently", this.props.isDriving);
             }
         }

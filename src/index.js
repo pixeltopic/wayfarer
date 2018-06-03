@@ -1,5 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+
 // Put any other imports below so that CSS from your
 // components takes precedence over default styles.
 import React from 'react';
