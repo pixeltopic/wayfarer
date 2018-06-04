@@ -1,13 +1,18 @@
 import axios from "axios";
 import { MAP_API_KEY, INCIDENTS_API_KEY } from "./apiKeys";
+import { convertPriceLevel } from "../logic/placesLogic.js";
 
 export const FETCH_DIRECTIONS = "fetch_directions";
 export const FETCH_INCIDENTS = "fetch_incidents";
 export const CLEAR_INCIDENTS = "clear_incidents";
 export const SEARCH_PARAMETERS = "search_parameters";
+export const FETCH_PLACES = "fetch_places";
+export const CLEAR_PLACES = "clear_places";
+export const FETCH_MORE_PLACES = "fetch_more_places";
 
 const GOOGLE_ROOT_URL = "https://maps.googleapis.com/maps/api/directions/";
 const MAPQUEST_ROOT_URL = "http://www.mapquestapi.com/traffic/v2/incidents";
+const GOOGLE_PLACES_ROOT_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
 const PROXY_URL = "https://cors-anywhere.herokuapp.com/"; // workaround for CORS
 
 // const url = "json?origin=Toronto&destination=Montreal&key=YOUR_API_KEY"
@@ -70,8 +75,42 @@ export function clearIncidents() {
     }
 }
 
-export function fetchLandmarks() {
-    return;
+export function fetchPlaces({ keywordInput, typeInput, radiusInput, minPrice, maxPrice }, location, unit) {
+    // given values from searchInputPlaces form, location from this.props.directionData, 
+    // and unit from this.props.searchParameters, make a Places API request
+    const minPriceVal = convertPriceLevel(minPrice);
+    const maxPriceVal = convertPriceLevel(maxPrice);
+    const radiusInMeters = unit === "imperial" ? parseFloat(radiusInput) * 1609 : parseFloat(radiusInput);
+
+    let BUILDURL = `${PROXY_URL}${GOOGLE_PLACES_ROOT_URL}?location=${location.lat},${location.lng}&radius=${radiusInMeters}${keywordInput ? `&keyword=${keywordInput}` : ""}${typeInput ? `&type=${typeInput}` : ""}${minPriceVal !== -1 ? `&minprice=${minPriceVal}` : ""}${maxPriceVal !== -1 ? `&maxprice=${maxPriceVal}` : ""}&key=${MAP_API_KEY}`;
+
+    const request = axios.get(BUILDURL);
+
+    return {
+        type: FETCH_PLACES,
+        payload: request
+    };
+}
+
+export function clearPlaces() {
+    // clear places found when making a new search
+    return {
+        type: CLEAR_PLACES,
+        payload: {}
+    }
+}
+
+export function fetchMorePlaces(token) {
+    // fetch next page after previous 20 results. only possible to be called if pagetoken is not undefined
+    let BUILDURL = `${PROXY_URL}${GOOGLE_PLACES_ROOT_URL}?pagetoken=${token}&key=${MAP_API_KEY}`;
+
+    const request = axios.get(BUILDURL);
+
+    return {
+        type: FETCH_MORE_PLACES,
+        payload: request
+    }
+
 }
 
 export function fetchOpenWeather() {

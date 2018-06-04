@@ -1,53 +1,24 @@
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import { connect } from "react-redux";
-import { Form, FormGroup, Button, ControlLabel } from "react-bootstrap";
-import { renderInput, renderSelect, createSelectArray } from "./inputComponents";
-import { Typeahead } from "react-bootstrap-typeahead";
-
-const typeaheadInput = ({ input, meta, name, type, placeholder, autosuggestArr, label, ...props }) => {
-    // renders text input field and combines redux-form and react-bootstrap
-    // input is from redux forms, but props is for react bootstrap form component
-    return (
-        <div>
-            <ControlLabel>{label}</ControlLabel>{' '}
-            <FormGroup>
-                <Typeahead 
-                options={autosuggestArr} 
-                placeholder={placeholder}
-                {...props} {...input}
-                />
-            </FormGroup>
-        </div>
-    );
-    // <ControlLabel>{label}</ControlLabel>{' '}
-    // <FormControl name={name} type={type} {...props} {...input} />
-}
-
-// TODO:
-// on componentdidmount, if place API is empty, make a call and autosuggest keywords too...
+import { fetchPlaces } from "../actions/actionTypes";
+import { Form, FormGroup, Button } from "react-bootstrap";
+import { renderInput, renderSelect, createSelectArray, typeaheadInput } from "./inputComponents";
+import { convertPriceLevel } from "../logic/placesLogic.js";
 
 // Note: This component will always assume that this.props.directionData is not empty. showPlaces.js returns
 // error messages.
-const convertPriceLevel = (level) => {
-    // converts price level text to the proper number.
-    switch(level.toLowerCase()) {
-        case "free": return 0;
-        case "inexpensive": return 1;
-        case "moderate": return 2;
-        case "expensive": return 3;
-        default: return 4;
-    }
-}
 
 class SearchInputPlaces extends Component {
 
     onSubmit(values) {
         console.log(values);
+        this.props.fetchPlaces(
+            values, this.props.directionData["0"]["legs"]["0"]["end_location"], this.props.searchParameters.unit);
     }
 
     render() {
-        const priceLevels = createSelectArray("Free", "Inexpensive", "Moderate", "Expensive", "Very Expensive");
+        const priceLevels = createSelectArray("None", "Free", "Inexpensive", "Moderate", "Expensive", "Very Expensive");
         // note: price levels need to be converted to its corresponding number in the action creator
         const autosuggestArr = ["cafe", "restaurant", "school", "airport"];
         // const unit_array = createSelectArray("Imperial", "Metric");
@@ -106,12 +77,13 @@ const validate = (values, props) => {
 
 function mapStateToProps(state) {
     return {
-        initialValues: { minPrice: "free", maxPrice: "very expensive" },
-        searchParameters: state.searchParameters
+        initialValues: { minPrice: "none", maxPrice: "none" },
+        searchParameters: state.searchParameters,
+        directionData: state.directionData
     };
 }
 
-export default connect(mapStateToProps)(
+export default connect(mapStateToProps, { fetchPlaces })(
     reduxForm({ 
         validate,
         form: "SearchInputPlacesForm",

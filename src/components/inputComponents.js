@@ -1,5 +1,6 @@
 import React from "react";
-import { ControlLabel, FormControl, Checkbox } from "react-bootstrap";
+import { ControlLabel, FormControl, Checkbox, FormGroup } from "react-bootstrap";
+import { Typeahead } from "react-bootstrap-typeahead";
 
 // { input, meta, custom prop parameters, ...props } must always be a parameter.
 // ...props preserves any leftover properties that would be lost in the destructuring
@@ -17,6 +18,23 @@ export const renderInput = ({ input, meta, name, type, placeholder, label, ...pr
             <div className="text-help">
                 { meta.touched ? meta.error : "" }
             </div>
+        </div>
+    );
+}
+
+export const typeaheadInput = ({ input, meta, name, type, placeholder, autosuggestArr, label, ...props }) => {
+    // renders text input field and combines redux-form and react-bootstrap
+    // input is from redux forms, but props is for react bootstrap form component
+    return (
+        <div>
+            <ControlLabel>{label}</ControlLabel>{' '}
+            <FormGroup>
+                <Typeahead 
+                options={autosuggestArr} 
+                placeholder={placeholder}
+                {...props} {...input}
+                />
+            </FormGroup>
         </div>
     );
 }

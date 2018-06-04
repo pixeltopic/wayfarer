@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
-import { fetchDirections, updateSearchParameters, clearIncidents } from "../actions/actionTypes";
+import { fetchDirections, updateSearchParameters, clearIncidents, clearPlaces } from "../actions/actionTypes";
 import { connect } from "react-redux";
 import { Form, FormGroup, ControlLabel, Button } from "react-bootstrap";
 import { renderInput, renderSelect, ynSelect, checkBox, createSelectArray } from "./inputComponents";
@@ -14,6 +14,7 @@ class SearchInput extends Component {
         console.log("Form submitted"); 
         // console.log(values);
         this.props.clearIncidents();
+        this.props.clearPlaces();
         this.props.updateSearchParameters(values);
         this.props.fetchDirections(values);
     }
@@ -84,7 +85,7 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, { fetchDirections, clearIncidents, updateSearchParameters })(
+export default connect(mapStateToProps, { fetchDirections, clearIncidents, updateSearchParameters, clearPlaces })(
     reduxForm({ 
         validate: validate, 
         form: "SearchInputForm",
