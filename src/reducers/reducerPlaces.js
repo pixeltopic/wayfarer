@@ -6,16 +6,32 @@ export default function(state = initialState.state, action) {
         case FETCH_PLACES:
             // returns results array from fetched places inside an object
             // console.log(action.payload.data);
-            return { 
-                nextPageToken: action.payload.data.next_page_token, 
-                results: action.payload.data.results
-             };
+            
+            let emptyState = {};
+            if (action.payload.data.next_page_token) {
+                emptyState.nextPageToken = action.payload.data.next_page_token;
+            }
+            emptyState.results = action.payload.data.results;
+            return emptyState;
+
+            // return { 
+            //     nextPageToken: action.payload.data.next_page_token, 
+            //     results: resultArr
+            //     // 2d array where each index of outer array = search page #.
+            //     // when filtering results, array will be flattened. page # stays the same, but rendered posts will differ
+            //  };
         case CLEAR_PLACES:
             return {};
         case FETCH_MORE_PLACES:
-            let cleanState = { ...state };
-            cleanState.nextPageToken = action.payload.data.next_page_token;
-            cleanState.results.concat(action.payload.data.results);
+            // console.log("entered reducer, payload:",action.payload);
+            let cleanState = { results: state.results };
+ 
+            if (action.payload.data.next_page_token) {
+                cleanState.nextPageToken = action.payload.data.next_page_token;
+            }
+            
+            // console.log("next page results:",action.payload.data.results);
+            cleanState.results = cleanState.results.concat(action.payload.data.results);
             return cleanState;
         default:
             return state;

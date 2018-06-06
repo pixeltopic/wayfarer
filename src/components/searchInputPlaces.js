@@ -9,10 +9,27 @@ import { convertPriceLevel } from "../logic/placesLogic.js";
 // Note: This component will always assume that this.props.directionData is not empty. showPlaces.js returns
 // error messages.
 
+const autosuggestArr = ["accounting", "airport", "amusement park", "aquarium", "art gallery",
+        "atm", "bakery", "bank", "bar", "beauty salon", "bicycle store", "book store",
+        "bowling alley", "bus station", "cafe", "campground", "car dealer", "car rental", "car repair", 
+        "car wash", "casino", "cemetery", "church", "city hall", "clothing store", "convenience store",
+        "courthouse", "dentist", "department store", "doctor", "electrician", "electronics store",
+        "embassy", "fire station", "florist", "funeral home", "furniture store",
+        "gas station", "gym", "hair care", "hardware store", "hospital", "jewelry store", "laundry",
+        "lawyer", "library", "liquor store", "local government office",
+        "locksmith", "lodging", "movie theater", "museum", "night club",
+        "park", "parking", "pet store", "pharmacy", "police", "post office", "restaurant",
+        "school", "shoe store", "shopping mall", "spa", "stadium", "store", "subway station", 
+        "supermarket", "train station", "transit station", "veterinary care", "zoo"];
+
 class SearchInputPlaces extends Component {
 
     onSubmit(values) {
         console.log(values);
+        if (values.typeInput) {
+            values.typeInput = values.typeInput.toString().toLowerCase().replace(/ /g,"_");
+        }
+        // console.log("Edited:",values);
         this.props.fetchPlaces(
             values, this.props.directionData["0"]["legs"]["0"]["end_location"], this.props.searchParameters.unit);
     }
@@ -20,7 +37,7 @@ class SearchInputPlaces extends Component {
     render() {
         const priceLevels = createSelectArray("None", "Free", "Inexpensive", "Moderate", "Expensive", "Very Expensive");
         // note: price levels need to be converted to its corresponding number in the action creator
-        const autosuggestArr = ["cafe", "restaurant", "school", "airport"];
+        // const autosuggestArr = ["cafe", "restaurant", "school", "airport"];
         // const unit_array = createSelectArray("Imperial", "Metric");
         // const unit = this.props.searchParameters.unit;
         // console.log(this.props.searchParameters);
@@ -71,6 +88,10 @@ const validate = (values, props) => {
     if (convertPriceLevel(values.minPrice) > convertPriceLevel(values.maxPrice)) {
         errors.minPrice = "Min price exceeds max price.";
     } // note: if price level is equal, it will be valid but account for that in the action...
+
+    if (values.typeInput && !autosuggestArr.includes(values.typeInput.toString().toLowerCase())) {
+        errors.typeInput = "Type must be equal to an autosuggestion."
+    }
 
     return errors;
 }

@@ -103,8 +103,10 @@ export function clearPlaces() {
 export function fetchMorePlaces(token) {
     // fetch next page after previous 20 results. only possible to be called if pagetoken is not undefined
     let BUILDURL = `${PROXY_URL}${GOOGLE_PLACES_ROOT_URL}?pagetoken=${token}&key=${MAP_API_KEY}`;
-
+    // callback used to increment page number in showPlaces local state
+    // console.log(BUILDURL);
     const request = axios.get(BUILDURL);
+    // request.then(_.debounce(() => callback()),500); // can't be on the same line as const request
 
     return {
         type: FETCH_MORE_PLACES,

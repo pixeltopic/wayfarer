@@ -35,6 +35,9 @@ export const typeaheadInput = ({ input, meta, name, type, placeholder, autosugge
                 {...props} {...input}
                 />
             </FormGroup>
+            <div className="text-help">
+                { meta.touched ? meta.error : "" }
+            </div>
         </div>
     );
 }
