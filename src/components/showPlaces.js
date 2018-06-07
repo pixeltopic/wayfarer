@@ -3,20 +3,31 @@ import { connect } from "react-redux";
 import _ from "lodash";
 import NavBar from "./navBar.js";
 import SearchInputPlaces from "./searchInputPlaces";
-import { Well, Button, ListGroup, ListGroupItem, Panel } from "react-bootstrap";
+import { Well, Button, ListGroup, ListGroupItem, Panel, Alert } from "react-bootstrap";
 import { fetchMorePlaces } from "../actions/actionTypes";
+import FilterPlaces from "./filterPlaces.js";
+import { formValueSelector } from "redux-form";
 
 // TODO:
 // ui: looking for places near {destination name}
-// Render places list and filter search bar using componentDidUpdate
-// render detailed info component
+// render detailed info component. create button with new component in each ListGroupItem, pass props in
 
-// add pagetoken action to concatenate new page results into the array (infinite scrolling) see api
+// add x distance away from destination info
 
 class ShowPlaces extends Component {
 
+    filterPageResults(resultArr, phrase) {
+        // given the results array, filters out text based on phrase
+        if (phrase && phrase.toString().replace(/ /g,"").length !== 0) {
+            return resultArr.filter(
+                place => place.name.toString().toLowerCase() === phrase.toString().toLowerCase());
+        } else {
+            return resultArr;
+        }
+    }
+
     renderPageResults(resultArr) {
-        // given 2d array of results, renders the results as a list based on page number
+        // given the results array, renders the results as a list
         let key = 0;
         const listGroupItemArr = resultArr.map(
             (place) => {
@@ -39,6 +50,9 @@ class ShowPlaces extends Component {
             return (
                 <div>
                     <NavBar />
+                    <Alert bsStyle="warning">
+                        <strong>No Info Found...</strong> Looks like you haven't searched any routes, your search was invalid, or the page needs to be refreshed.
+                    </Alert>
                 </div>
             );
         }
@@ -56,8 +70,8 @@ class ShowPlaces extends Component {
             return (
                 <div><NavBar /><Well><SearchInputPlaces /></Well>
                     <Panel><Panel.Body>
-                    Render searchbar filter here
-                    {this.renderPageResults(this.props.placesData.results)}
+                    <FilterPlaces />
+                    {this.renderPageResults(this.filterPageResults(this.props.placesData.results, this.props.filterInput))}
                     <Button disabled={ this.props.placesData.nextPageToken ? false : true }
                     onClick={() => this.props.fetchMorePlaces(this.props.placesData.nextPageToken)}>Show More</Button>
                     </Panel.Body></Panel>
@@ -68,14 +82,20 @@ class ShowPlaces extends Component {
             return (
                 <div>
                     <NavBar /><Well><SearchInputPlaces /></Well>
-                    Return alert here: no results found!
+                    <Alert bsStyle="warning">
+                        <strong>No Info Found...</strong> No places were found that matched your query.
+                    </Alert>
                 </div>
             );
 
         } else {
             // search not yet made for places
             return (
-                <div><NavBar /><Well><SearchInputPlaces /></Well></div>
+                <div><NavBar /><Well><SearchInputPlaces /></Well>
+                        <Alert bsStyle="warning">
+                            <strong>No Info Found...</strong> Looks like you haven't searched anything or your search was invalid.
+                        </Alert>
+                </div>
             );
         }
         // render filter location button here using autosuggest
@@ -84,7 +104,12 @@ class ShowPlaces extends Component {
 }
 
 function mapStateToProps(state) {
-    return { directionData: state.directionData, placesData: state.placesData } // did not link up placesData state yet
+    const selector = formValueSelector("FilterPlacesForm");
+    return { 
+        directionData: state.directionData, 
+        placesData: state.placesData,
+        filterInput: selector(state, "filterInput")
+    }
 }
 
 export default connect(mapStateToProps, { fetchMorePlaces })(ShowPlaces);
