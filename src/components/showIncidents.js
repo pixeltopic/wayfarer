@@ -134,7 +134,7 @@ class ShowIncidents extends Component {
         }
         const jumboStyle = {
             backgroundImage: `linear-gradient(rgba(46, 43, 43, 0.4), rgba(20, 35, 62, 0.4)), url(${banner})`,
-            backgroundPosition: "center",
+            backgroundPosition: "50% 75%",
             backgroundSize: "cover",
             textAlign: "center"
         }

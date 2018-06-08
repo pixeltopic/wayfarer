@@ -12,7 +12,7 @@
   padding: 20px;
   color: white;
   background-image: linear-gradient(rgba(46, 43, 43, 0.4), rgba(20, 35, 62, 0.4)), url("./assets/header.png");
-  background-position: center;
+  background-position: 50% 35%;
   background-size: cover;
 }
 
@@ -29,3 +29,10 @@
   margin: auto;
 }
 
+body{
+  background-image: url("./assets/bg.png");
+  background-repeat: repeat-x;
+  background-attachment: fixed;
+  background-color: #141724;
+  background-position-y: 50%;
+}
