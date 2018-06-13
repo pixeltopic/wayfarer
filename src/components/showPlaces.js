@@ -9,6 +9,7 @@ import FilterPlaces from "./filterPlaces.js";
 import { formValueSelector } from "redux-form";
 import "./showPlaces.css";
 import banner from "../assets/places_banner.gif";
+import { getDistance } from "geolib";
 
 // TODO:
 // ui: looking for places near {destination name}
@@ -19,22 +20,42 @@ import banner from "../assets/places_banner.gif";
 class ShowPlaces extends Component {
 
     filterPageResults(resultArr, phrase) {
-        // given the results array, filters out text based on phrase
+        // given the results array, filters out text based on phrase, then orders by increasing distance
+
+        const dest = this.props.directionData["0"]["legs"]["0"]["end_location"];
+
         if (phrase && phrase.toString().replace(/ /g,"").length !== 0) {
-            return resultArr.filter(
+            let filteredArr = resultArr.filter(
                 place => place.name.toString().toLowerCase() === phrase.toString().toLowerCase());
+            return [...filteredArr].sort(
+                (placeA, placeB) => {
+                    let distanceAwayA = getDistance({ lat: dest.lat, lng: dest.lng }, { lat: placeA.geometry.location.lat, lng: placeA.geometry.location.lng });
+                    let distanceAwayB = getDistance({ lat: dest.lat, lng: dest.lng }, { lat: placeB.geometry.location.lat, lng: placeB.geometry.location.lng });
+                    return distanceAwayA - distanceAwayB;
+                }
+            );
         } else {
-            return resultArr;
+            return [...resultArr].sort(
+                (placeA, placeB) => {
+                    let distanceAwayA = getDistance({ lat: dest.lat, lng: dest.lng }, { lat: placeA.geometry.location.lat, lng: placeA.geometry.location.lng });
+                    let distanceAwayB = getDistance({ lat: dest.lat, lng: dest.lng }, { lat: placeB.geometry.location.lat, lng: placeB.geometry.location.lng });
+                    return distanceAwayA - distanceAwayB;
+                }
+            );
         }
     }
 
     renderPageResults(resultArr) {
         // given the results array, renders the results as a list
         let key = 0;
+        const dest = this.props.directionData["0"]["legs"]["0"]["end_location"];
+        const unitDisplay = this.props.searchParameters.unit;
         const listGroupItemArr = resultArr.map(
             (place) => {
+                let distanceAway = getDistance({ lat: dest.lat, lng: dest.lng }, { lat: place.geometry.location.lat, lng: place.geometry.location.lng });
+                let distanceAwayStr = `${unitDisplay === "metric" ? distanceAway/1000 : Math.round(distanceAway/1609*100)/100 } ${unitDisplay === "metric" ? "km" : "mi"}`;
                 return (
-                    <ListGroupItem key={key++} header={place.name}>Located at {place.vicinity}</ListGroupItem>
+                    <ListGroupItem key={key++} header={place.name}>Located {distanceAwayStr} away at {place.vicinity}</ListGroupItem>
                 );
             }
         );

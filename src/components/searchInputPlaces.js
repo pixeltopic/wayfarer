@@ -55,7 +55,7 @@ class SearchInputPlaces extends Component {
                 </FormGroup>{' '}
 
                 <FormGroup controlId="radiusInput">
-                    <Field name="radiusInput" type="number" placeholder="e.g. 30" label={`Max Distance Away in ${unit === "metric" ? "m" : "mi"}:`} component={renderInput} />
+                    <Field name="radiusInput" type="number" placeholder="e.g. 30" label={`Max Distance Away in ${unit === "metric" ? "km" : "mi"}:`} component={renderInput} />
                 </FormGroup>{' '}
 
                 <FormGroup controlId="formControlsMinPrice">
@@ -82,8 +82,8 @@ const validate = (values, props) => {
         errors.radiusInput = "Enter Distance to search from your destination.";
     } else if (unit === "imperial" && (values.radiusInput > 31 || values.radiusInput < 0.1)) {
         errors.radiusInput = "Distance must be positive and 31 miles max.";
-    } else if (unit === "metric" && (values.radiusInput > 50000 || values.radiusInput < 0.1)) {
-        errors.radiusInput = "Distance must be positive and 50,000 meters max.";
+    } else if (unit === "metric" && (values.radiusInput > 50 || values.radiusInput < 0.1)) {
+        errors.radiusInput = "Distance must be positive and 50 kilometers max.";
     }
     if (convertPriceLevel(values.minPrice) > convertPriceLevel(values.maxPrice)) {
         errors.minPrice = "Min price exceeds max price.";

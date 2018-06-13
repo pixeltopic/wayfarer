@@ -80,7 +80,7 @@ export function fetchPlaces({ keywordInput, typeInput, radiusInput, minPrice, ma
     // and unit from this.props.searchParameters, make a Places API request
     const minPriceVal = convertPriceLevel(minPrice);
     const maxPriceVal = convertPriceLevel(maxPrice);
-    const radiusInMeters = unit === "imperial" ? parseFloat(radiusInput) * 1609 : parseFloat(radiusInput);
+    const radiusInMeters = unit === "imperial" ? parseFloat(radiusInput) * 1609 : parseFloat(radiusInput) * 1000;
 
     let BUILDURL = `${PROXY_URL}${GOOGLE_PLACES_ROOT_URL}?location=${location.lat},${location.lng}&radius=${radiusInMeters}${keywordInput ? `&keyword=${keywordInput}` : ""}${typeInput ? `&type=${typeInput}` : ""}${minPriceVal !== -1 ? `&minprice=${minPriceVal}` : ""}${maxPriceVal !== -1 ? `&maxprice=${maxPriceVal}` : ""}&key=${MAP_API_KEY}`;
 
