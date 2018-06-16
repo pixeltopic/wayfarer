@@ -4,20 +4,29 @@ import _ from "lodash";
 import NavBar from "./navBar.js";
 import SearchInputPlaces from "./searchInputPlaces";
 import { Well, Button, ListGroup, ListGroupItem, Panel, Alert, Jumbotron } from "react-bootstrap";
-import { fetchMorePlaces } from "../actions/actionTypes";
+import { fetchMorePlaces, fetchPlaceDetails } from "../actions/actionTypes";
 import FilterPlaces from "./filterPlaces.js";
 import { formValueSelector } from "redux-form";
 import "./showPlaces.css";
 import banner from "../assets/places_banner.gif";
 import { getDistance } from "geolib";
+import { Link } from "react-router-dom";
 
 // TODO:
-// ui: looking for places near {destination name}
 // render detailed info component. create button with new component in each ListGroupItem, pass props in
 
-// add x distance away from destination info
+/*
+<Button disabled={this.state.displayingDetails ? true : false } key={key++} onClick={() => this.setState({ displayingDetails : true })}>Toggle Details</Button>
+    { this.state.displayingDetails ? <ShowPlaceDetails key={key} locationID={place.place_id} /> : null}
+this.props.fetchPlaceDetails(this.locationID, this.key);
+*/
 
 class ShowPlaces extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = { displayingDetails : false };
+    }
 
     filterPageResults(resultArr, phrase) {
         // given the results array, filters out text based on phrase, then orders by increasing distance
@@ -55,7 +64,9 @@ class ShowPlaces extends Component {
                 let distanceAway = getDistance({ lat: dest.lat, lng: dest.lng }, { lat: place.geometry.location.lat, lng: place.geometry.location.lng });
                 let distanceAwayStr = `${unitDisplay === "metric" ? distanceAway/1000 : Math.round(distanceAway/1609*100)/100 } ${unitDisplay === "metric" ? "km" : "mi"}`;
                 return (
-                    <ListGroupItem key={key++} header={place.name}>Located {distanceAwayStr} away at {place.vicinity}</ListGroupItem>
+                    <ListGroupItem key={key++} header={place.name}>Located {distanceAwayStr} away at {place.vicinity}
+                    <Link onClick={() => this.props.fetchPlaceDetails(place.place_id)} to={"/places/details"} > View more</Link>        
+                    </ListGroupItem>
                 );
             }
         );
@@ -167,4 +178,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, { fetchMorePlaces })(ShowPlaces);
+export default connect(mapStateToProps, { fetchMorePlaces, fetchPlaceDetails })(ShowPlaces);

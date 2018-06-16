@@ -9,10 +9,13 @@ export const SEARCH_PARAMETERS = "search_parameters";
 export const FETCH_PLACES = "fetch_places";
 export const CLEAR_PLACES = "clear_places";
 export const FETCH_MORE_PLACES = "fetch_more_places";
+export const FETCH_PLACE_DETAILS = "fetch_place_details";
+export const CLEAR_PLACE_DETAILS = "clear_place_details";
 
 const GOOGLE_ROOT_URL = "https://maps.googleapis.com/maps/api/directions/";
 const MAPQUEST_ROOT_URL = "http://www.mapquestapi.com/traffic/v2/incidents";
 const GOOGLE_PLACES_ROOT_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
+const GOOGLE_PLACE_DETAILS_ROOT_URL = "https://maps.googleapis.com/maps/api/place/details/json";
 const PROXY_URL = "https://cors-anywhere.herokuapp.com/"; // workaround for CORS
 
 // const url = "json?origin=Toronto&destination=Montreal&key=YOUR_API_KEY"
@@ -115,6 +118,20 @@ export function fetchMorePlaces(token) {
 
 }
 
-export function fetchOpenWeather() {
-    
+export function fetchPlaceDetails(placeID) {
+    // given place ID, fetches place details and assigns it to specified key (a number)
+    const DETAILS_URL = `${PROXY_URL}${GOOGLE_PLACE_DETAILS_ROOT_URL}?placeid=${placeID}&key=${MAP_API_KEY}`;
+    const request = axios.get(DETAILS_URL);
+    return {
+        type: FETCH_PLACE_DETAILS,
+        payload: request
+    }
+
+}
+
+export function clearPlaceDetails() {
+    return {
+        type: CLEAR_PLACE_DETAILS,
+        payload: {}
+    }
 }

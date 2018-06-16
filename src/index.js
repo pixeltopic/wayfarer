@@ -16,6 +16,7 @@ import App from './App';
 import ShowDirections from "./components/showDirections.js";
 import ShowIncidents from "./components/showIncidents.js";
 import ShowPlaces from "./components/showPlaces.js";
+import ShowPlaceDetails from "./components/showPlaceDetails.js";
 
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import registerServiceWorker from './registerServiceWorker';
@@ -34,6 +35,7 @@ ReactDOM.render(
                 <Switch>
                     <Route path="/directions" component={ShowDirections} />
                     <Route path="/incidents" component={ShowIncidents} />
+                    <Route path="/places/details" component={ShowPlaceDetails} />
                     <Route path="/places" component={ShowPlaces} />
                     <Route path="/" component={App} />
                 </Switch>

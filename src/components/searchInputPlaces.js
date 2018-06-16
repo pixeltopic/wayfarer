@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import { connect } from "react-redux";
-import { fetchPlaces } from "../actions/actionTypes";
+import { fetchPlaces, clearPlaceDetails } from "../actions/actionTypes";
 import { Form, FormGroup, Button } from "react-bootstrap";
 import { renderInput, renderSelect, createSelectArray, typeaheadInput } from "./inputComponents";
 import { convertPriceLevel } from "../logic/placesLogic.js";
@@ -30,6 +30,7 @@ class SearchInputPlaces extends Component {
             values.typeInput = values.typeInput.toString().toLowerCase().replace(/ /g,"_");
         }
         // console.log("Edited:",values);
+        this.props.clearPlaceDetails();
         this.props.fetchPlaces(
             values, this.props.directionData["0"]["legs"]["0"]["end_location"], this.props.searchParameters.unit);
     }
@@ -104,7 +105,7 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, { fetchPlaces })(
+export default connect(mapStateToProps, { fetchPlaces, clearPlaceDetails })(
     reduxForm({ 
         validate,
         form: "SearchInputPlacesForm",

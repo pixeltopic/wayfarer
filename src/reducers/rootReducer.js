@@ -3,6 +3,7 @@ import reducerDirections from "./reducerDirections";
 import reducerSearchParameters from "./reducerSearchParameters";
 import reducerIncidents from "./reducerIncidents";
 import reducerPlaces from "./reducerPlaces";
+import reducerPlaceDetails from "./reducerPlaceDetails";
 import { reducer as formReducer } from "redux-form";
 
 /*
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
     directionData: reducerDirections,
     form: formReducer,
     incidentsData: reducerIncidents,
-    placesData : reducerPlaces
+    placesData : reducerPlaces,
+    placeDetails : reducerPlaceDetails
 });
 
 export default rootReducer;
