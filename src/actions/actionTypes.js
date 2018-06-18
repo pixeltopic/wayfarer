@@ -11,11 +11,14 @@ export const CLEAR_PLACES = "clear_places";
 export const FETCH_MORE_PLACES = "fetch_more_places";
 export const FETCH_PLACE_DETAILS = "fetch_place_details";
 export const CLEAR_PLACE_DETAILS = "clear_place_details";
+export const FETCH_PLACE_PHOTOS = "fetch_place_photos";
+export const CLEAR_PLACE_PHOTOS = "clear_place_photos";
 
 const GOOGLE_ROOT_URL = "https://maps.googleapis.com/maps/api/directions/";
 const MAPQUEST_ROOT_URL = "http://www.mapquestapi.com/traffic/v2/incidents";
 const GOOGLE_PLACES_ROOT_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
 const GOOGLE_PLACE_DETAILS_ROOT_URL = "https://maps.googleapis.com/maps/api/place/details/json";
+const GOOGLE_PLACE_PHOTOS_ROOT_URL = "https://maps.googleapis.com/maps/api/place/photo";
 const PROXY_URL = "https://cors-anywhere.herokuapp.com/"; // workaround for CORS
 
 // const url = "json?origin=Toronto&destination=Montreal&key=YOUR_API_KEY"
@@ -132,6 +135,30 @@ export function fetchPlaceDetails(placeID) {
 export function clearPlaceDetails() {
     return {
         type: CLEAR_PLACE_DETAILS,
+        payload: {}
+    }
+}
+
+export function fetchPlacePhotos(photoReferenceArray) {
+    // given photoReference array from the Google Places API, fetch the requested photos.
+    
+    const refs = photoReferenceArray.map(x => x.photo_reference);
+    // console.log(refs);
+    return {
+        type: FETCH_PLACE_PHOTOS,
+        payload: refs.map(photo => `${GOOGLE_PLACE_PHOTOS_ROOT_URL}?maxheight=${400}&photoreference=${photo}&key=${MAP_API_KEY}`)
+        // payload: axios.all(
+        //     refs.map(
+        //         photo => 
+        //         axios.get(`${PROXY_URL}${GOOGLE_PLACE_PHOTOS_ROOT_URL}?maxheight=${400}&photoreference=${photo}&key=${MAP_API_KEY}`)
+        //     )
+        // )
+    }
+}
+
+export function clearPlacePhotos() {
+    return {
+        type: CLEAR_PLACE_PHOTOS,
         payload: {}
     }
 }

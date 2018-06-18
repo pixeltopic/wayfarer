@@ -4,7 +4,7 @@ import _ from "lodash";
 import NavBar from "./navBar.js";
 import SearchInputPlaces from "./searchInputPlaces";
 import { Well, Button, ListGroup, ListGroupItem, Panel, Alert, Jumbotron } from "react-bootstrap";
-import { fetchMorePlaces, fetchPlaceDetails } from "../actions/actionTypes";
+import { fetchMorePlaces, fetchPlaceDetails, clearPlaceDetails, clearPlacePhotos } from "../actions/actionTypes";
 import FilterPlaces from "./filterPlaces.js";
 import { formValueSelector } from "redux-form";
 import "./showPlaces.css";
@@ -65,7 +65,11 @@ class ShowPlaces extends Component {
                 let distanceAwayStr = `${unitDisplay === "metric" ? distanceAway/1000 : Math.round(distanceAway/1609*100)/100 } ${unitDisplay === "metric" ? "km" : "mi"}`;
                 return (
                     <ListGroupItem key={key++} header={place.name}>Located {distanceAwayStr} away at {place.vicinity}
-                    <Link onClick={() => this.props.fetchPlaceDetails(place.place_id)} to={"/places/details"} > View more</Link>        
+                    <Link onClick={() => {
+                        this.props.clearPlaceDetails();
+                        this.props.clearPlacePhotos();
+                        this.props.fetchPlaceDetails(place.place_id);
+                        }} to={"/places/details"} > View more</Link>        
                     </ListGroupItem>
                 );
             }
@@ -178,4 +182,4 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, { fetchMorePlaces, fetchPlaceDetails })(ShowPlaces);
+export default connect(mapStateToProps, { fetchMorePlaces, fetchPlaceDetails, clearPlaceDetails, clearPlacePhotos })(ShowPlaces);
