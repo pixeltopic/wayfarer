@@ -1,8 +1,9 @@
 import React from "react";
-import { decodePolyline, calcCenterWithBounds } from "../logic/mapLogic.js";
 import fontawesome from "fontawesome-markers";
 import { withScriptjs, withGoogleMap, GoogleMap, Marker, Polyline } from "react-google-maps";
-import { MAP_API_KEY } from "../actions/apiKeys";
+
+import { MAP_API_KEY } from "../../actions/apiKeys";
+import { decodePolyline, calcCenterWithBounds } from "./mapLogic";
 
 const PolylineMapComponent = withScriptjs(withGoogleMap((props) =>
     <GoogleMap defaultZoom={9} defaultCenter={props.routeCenter} >

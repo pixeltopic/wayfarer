@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import logo from "./assets/bonfire_logo.gif";
-import './App.css';
-
-import SearchInput from "./components/searchInput";
-import NavBar from "./components/navBar";
-// import ShowIncidents from "./components/showIncidents";
-
-// import { Link } from "react-router-dom";
 import { Well } from "react-bootstrap";
+
+import SearchInput from "./searchInput";
+import NavBar from "../common/navBar";
+import logo from "../../assets/bonfire_logo.gif";
+import "../../style/App.css";
 
 // cd C:\Users\xmobl\Documents\GitRepos\wayfarer
 

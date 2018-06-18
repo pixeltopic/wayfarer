@@ -2,11 +2,12 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import _ from "lodash";
 // import { formValueSelector } from "redux-form";
-import NavBar from "./navBar.js";
-import { PolylineMap } from "./showMap.js";
 import { Tabs, Tab, Panel, ListGroup, ListGroupItem, Alert, PageHeader, Jumbotron } from "react-bootstrap";
-import "./showDirections.css";
-import banner from "../assets/direction_banner.gif";
+
+import NavBar from "../common/navBar";
+import { PolylineMap } from "../common/showMap";
+import "../../style/showDirections.css";
+import banner from "../../assets/direction_banner.gif";
 
 // TODO: add origin/destination to each route tab for more detail along with any other useful details.
 

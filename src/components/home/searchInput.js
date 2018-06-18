@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
-import { fetchDirections, updateSearchParameters, clearIncidents, clearPlaces, clearPlaceDetails } from "../actions/actionTypes";
+import { fetchDirections, updateSearchParameters, clearIncidents, clearPlaces, clearPlaceDetails } from "../../actions/actionTypes";
 import { connect } from "react-redux";
 import { Form, FormGroup, ControlLabel, Button } from "react-bootstrap";
-import { renderInput, renderSelect, ynSelect, checkBox, createSelectArray } from "./inputComponents";
+import { renderInput, renderSelect, ynSelect, checkBox, createSelectArray } from "../common/inputComponents";
 
 // TODO: Validation, warnings for indoor selection, short hover descriptions of options?
 
@@ -11,7 +11,7 @@ class SearchInput extends Component {
 
     onSubmit(values) {
         // uses callback from App to force-update parent (App's) state.
-        console.log("Form submitted"); 
+        console.log("Form submitted", values); 
         // console.log(values);
         this.props.clearIncidents();
         this.props.clearPlaces();

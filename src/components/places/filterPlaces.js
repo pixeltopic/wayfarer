@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import { connect } from "react-redux";
 import { Form, FormGroup } from "react-bootstrap";
-import { typeaheadInput } from "./inputComponents";
+import { typeaheadInput } from "../common/inputComponents";
 
 class FilterPlaces extends Component {
     render() {

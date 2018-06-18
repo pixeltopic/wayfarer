@@ -4,19 +4,19 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 
 // Put any other imports below so that CSS from your
 // components takes precedence over default styles.
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import promiseMiddleware from "redux-promise";
-import rootReducer from "./reducers/rootReducer";
-import './index.css';
 
-import App from './App';
-import ShowDirections from "./components/showDirections.js";
-import ShowIncidents from "./components/showIncidents.js";
-import ShowPlaces from "./components/showPlaces.js";
-import ShowPlaceDetails from "./components/showPlaceDetails.js";
+import rootReducer from "./reducers/rootReducer";
+import "./style/index.css";
+import App from "./components/home/App";
+import ShowDirections from "./components/directions/showDirections";
+import ShowIncidents from "./components/incidents/showIncidents";
+import ShowPlaces from "./components/places/showPlaces";
+import ShowPlaceDetails from "./components/places/showPlaceDetails";
 
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import registerServiceWorker from './registerServiceWorker';

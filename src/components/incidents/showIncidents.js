@@ -1,14 +1,15 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import _ from "lodash";
-import NavBar from "./navBar.js";
-import { IncidentPolylineMap } from "./showMap.js";
-import { updateFullIncidentState } from "../logic/incidentLogic.js";
-import { fetchIncidents } from "../actions/actionTypes";
 // import { formValueSelector } from "redux-form";
 import { Tabs, Tab, Panel, ListGroup, ListGroupItem, Alert, Label, PageHeader, Jumbotron } from "react-bootstrap";
-import "./showIncidents.css";
-import banner from "../assets/incidents_banner.gif";
+
+import NavBar from "../common/navBar";
+import { IncidentPolylineMap } from "../common/showMap";
+import { updateFullIncidentState } from "./incidentLogic";
+import { fetchIncidents } from "../../actions/actionTypes";
+import "../../style/showIncidents.css";
+import banner from "../../assets/incidents_banner.gif";
 
 // TODO: add button to refresh page, or perhaps add componentDidUpdate with the same code as didMount?
 // Add a LEGEND displaying what each marker on the google maps means.

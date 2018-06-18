@@ -1,16 +1,17 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import _ from "lodash";
-import NavBar from "./navBar.js";
-import SearchInputPlaces from "./searchInputPlaces";
 import { Well, Button, ListGroup, ListGroupItem, Panel, Alert, Jumbotron } from "react-bootstrap";
-import { fetchMorePlaces, fetchPlaceDetails, clearPlaceDetails, clearPlacePhotos } from "../actions/actionTypes";
-import FilterPlaces from "./filterPlaces.js";
 import { formValueSelector } from "redux-form";
-import "./showPlaces.css";
-import banner from "../assets/places_banner.gif";
 import { getDistance } from "geolib";
 import { Link } from "react-router-dom";
+
+import NavBar from "../common/navBar";
+import { fetchMorePlaces, fetchPlaceDetails, clearPlaceDetails, clearPlacePhotos } from "../../actions/actionTypes";
+import SearchInputPlaces from "./searchInputPlaces";
+import FilterPlaces from "./filterPlaces";
+import "../../style/showPlaces.css";
+import banner from "../../assets/places_banner.gif";
 
 // TODO:
 // render detailed info component. create button with new component in each ListGroupItem, pass props in

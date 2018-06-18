@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import { connect } from "react-redux";
-import { fetchPlaces, clearPlaceDetails } from "../actions/actionTypes";
 import { Form, FormGroup, Button } from "react-bootstrap";
-import { renderInput, renderSelect, createSelectArray, typeaheadInput } from "./inputComponents";
-import { convertPriceLevel } from "../logic/placesLogic.js";
+
+import { fetchPlaces, clearPlaceDetails } from "../../actions/actionTypes";
+import { renderInput, renderSelect, createSelectArray, typeaheadInput } from "../common/inputComponents";
+import { convertPriceLevel } from "./placesLogic";
 
 // Note: This component will always assume that this.props.directionData is not empty. showPlaces.js returns
 // error messages.

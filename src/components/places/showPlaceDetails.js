@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { fetchPlaceDetails, fetchPlacePhotos } from "../actions/actionTypes";
+import { fetchPlaceDetails, fetchPlacePhotos } from "../../actions/actionTypes";
 import { connect } from "react-redux";
 import _ from "lodash";
 import { Panel, Button, Alert, Carousel } from "react-bootstrap";

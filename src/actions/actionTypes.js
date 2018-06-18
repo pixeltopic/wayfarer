@@ -1,6 +1,6 @@
 import axios from "axios";
 import { MAP_API_KEY, INCIDENTS_API_KEY } from "./apiKeys";
-import { convertPriceLevel } from "../logic/placesLogic.js";
+import { convertPriceLevel } from "../components/places/placesLogic";
 
 export const FETCH_DIRECTIONS = "fetch_directions";
 export const FETCH_INCIDENTS = "fetch_incidents";
