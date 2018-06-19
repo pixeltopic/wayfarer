@@ -1,9 +1,9 @@
 import React from "react";
-import fontawesome from "fontawesome-markers";
-import { withScriptjs, withGoogleMap, GoogleMap, Marker, Polyline } from "react-google-maps";
+import { withScriptjs, withGoogleMap, GoogleMap, Polyline } from "react-google-maps";
 
 import { MAP_API_KEY } from "../../actions/apiKeys";
 import { decodePolyline, calcCenterWithBounds } from "./mapLogic";
+import { iconHome, iconDestination, makeMarker, makeIncidentMarker, iconPlace } from "./mapMarkers";
 
 const PolylineMapComponent = withScriptjs(withGoogleMap((props) =>
     <GoogleMap defaultZoom={9} defaultCenter={props.routeCenter} >
@@ -12,31 +12,6 @@ const PolylineMapComponent = withScriptjs(withGoogleMap((props) =>
     {props.isMarkerShown && props.markerArray}
     </GoogleMap>
 ));
-
-const iconHome = {
-    path: fontawesome.HOME,
-    fillColor: "#5bc1de",
-    fillOpacity: 1,
-    strokeWeight: 2,
-    strokeOpacity: 0.9,
-    scale: 0.65
-}
-
-const iconDestination = {
-    path: fontawesome.STAR,
-    fillColor: "#d9c636",
-    fillOpacity: 1,
-    strokeWeight: 2,
-    strokeOpacity: 0.9,
-    scale: 0.65
-}
-
-const makeMarker = (key, position, icon) => {
-    // creates a marker with specified key, lat lng position, and icon
-    return (
-        <Marker key={key} position={position} icon={icon} />
-    );
-}
 
 export const PolylineMap = (props) => {
     // takes routeBounds and overviewPolyine props given info from a this.props.directionData route
@@ -55,39 +30,6 @@ export const PolylineMap = (props) => {
             markerArray={markerArray}
         />);
 
-}
-
-const makeIncidentMarker = (incident) => {
-    // given an incident, create a marker
-    let fillColor;
-    switch(incident.severity) {
-        case 1: fillColor = "#5cb85c";
-            break;
-        case 2: fillColor = "#757575";
-            break;
-        case 3: fillColor = "#f0ad4f";
-            break;
-        default: fillColor = "#d95250";
-    }
-    let path;
-    switch (incident.type) {
-        case 1: path = fontawesome.WARNING;
-            break;
-        case 2: path = fontawesome.FLAG;
-            break;
-        case 3: path = fontawesome.CAR;
-            break;
-        default: path = fontawesome.INFO;
-    }
-    const incidentIcon = {
-        path,
-        fillColor,
-        fillOpacity: 1,
-        strokeWeight: 1.5,
-        strokeOpacity: 0.9,
-        scale: 0.45
-    }
-    return (<Marker key={incident.id} position={{lat: incident.lat, lng: incident.lng}} icon={incidentIcon} />);
 }
 
 export const IncidentPolylineMap = (props) => {
@@ -112,4 +54,26 @@ export const IncidentPolylineMap = (props) => {
             markerArray={markerArray.concat(incidentsMarkerArray)}
         />);
 
+}
+
+export const PlacePolylineMap = (props) => {
+    // takes place lat lng and renders a marker on the map along with the polyline from a respective route
+    // custom props: overviewPolyline, routeBounds, placeLocation
+    const decodedPolyline = decodePolyline(props.overviewPolyline);
+    const markerArray = [
+        makeMarker(0, decodedPolyline[0],iconHome), 
+        makeMarker(1, decodedPolyline[decodedPolyline.length-1],iconDestination),
+        makeMarker(2, props.placeLocation,iconPlace)
+    ];
+    return (
+        <PolylineMapComponent
+            isMarkerShown
+            googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${MAP_API_KEY}`}
+            loadingElement={<div style={{ height: `100%` }} />}
+            containerElement={<div style={{ height: `400px` }} />}
+            mapElement={<div style={{ height: `100%` }} />}
+            decodedPoly={decodedPolyline}
+            routeCenter={calcCenterWithBounds(props.routeBounds)}
+            markerArray={markerArray}
+        />);
 }
