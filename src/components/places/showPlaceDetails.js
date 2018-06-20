@@ -2,13 +2,26 @@ import React, { Component } from "react";
 import { fetchPlaceDetails, fetchPlacePhotos } from "../../actions/actionTypes";
 import { connect } from "react-redux";
 import _ from "lodash";
-import { Panel, Button, Alert, Carousel, Jumbotron, Label, Tab, Tabs, PageHeader } from "react-bootstrap";
+import { Panel, Button, Alert, Carousel, Jumbotron, Label, Tab, Tabs, PageHeader, Badge, Breadcrumb } from "react-bootstrap";
 import NavBar from "../common/navBar";
 import { reconvertPriceLevel } from "./placesLogic";
 import { PlacePolylineMap } from "../common/showMap";
 import ReviewList from "./reviewList";
+import ScheduleTable from "./scheduleTable";
 import "../../style/showPlaceDetails.css";
+import banner from "../../assets/place_detail_banner.gif";
 // import { Link } from "react-router-dom";
+
+const PricingLabel = props => {
+    switch(props.pricing) {
+        case 0: return <Label bsStyle="success">Free</Label>
+        case 1: return <Label bsStyle="primary">Inexpensive</Label>
+        case 2: return <Label bsStyle="info">Moderately Priced</Label>
+        case 3: return <Label bsStyle="warning">Expensive</Label>
+        case 4: return <Label bsStyle="danger">Very Expensive</Label>
+        default: return <Label bsStyle="default">No Pricing Info</Label>
+    }
+}
 
 class ShowPlaceDetails extends Component {
 
@@ -43,14 +56,14 @@ class ShowPlaceDetails extends Component {
 
     }
 
-    generateTypeLabels(typeArray) {
-        // given typeArray from this.props.placeDetails.result.types, generates an array of labels
+    generateTypeBadge(typeArray) {
+        // given typeArray from this.props.placeDetails.result.types, generates an array of badges
         let key = 0;
         return typeArray.map(
             type => {
                 return (
                     <div key={key++} style={{ display: "inline" }}>
-                        {" "}<Label bsStyle="info">{type.toString().replace(/_/g, " ")}</Label>
+                        <Badge style={{ margin: "0 1px 20px 1px" }}>{type.toString().replace(/_/g, " ")}</Badge>
                     </div>
                 );
             }
@@ -91,12 +104,17 @@ class ShowPlaceDetails extends Component {
         const { name, rating, formatted_address, opening_hours, price_level, types, website, geometry } = this.props.placeDetails.result;
         // style a button later to programmatically navigate back
         const jumboStyle = {
-            // backgroundImage: `linear-gradient(rgba(46, 43, 43, 0.4), rgba(20, 35, 62, 0.4)), url(${banner})`,
-            // backgroundPosition: "50% 75%",
-            // backgroundSize: "cover",
+            backgroundImage: `linear-gradient(rgba(46, 43, 43, 0.4), rgba(20, 35, 62, 0.4)), url(${banner})`,
+            backgroundPosition: "50% 75%",
+            backgroundSize: "cover",
             textAlign: "center",
             boxShadow: "3px 3px 3px 1px rgba(0, 0, 0, .6)"
         }
+
+        const textStyle = {
+            color: "white"
+        }
+
         return(
             <div>
                 {/*<Panel>
@@ -104,29 +122,45 @@ class ShowPlaceDetails extends Component {
                 </Panel>*/}
                 <NavBar />
                 <div className="PlaceDetails-body">
-                
+                    <Breadcrumb style={{ backgroundColor: "#383838" }}>
+                        <Breadcrumb.Item onClick={() => this.props.history.push("/")}>Search</Breadcrumb.Item>
+                        <Breadcrumb.Item onClick={() => this.props.history.push("/places")}>
+                            Get Places
+                        </Breadcrumb.Item>
+                        <Breadcrumb.Item active>Place Details</Breadcrumb.Item>
+                    </Breadcrumb>
                     <Jumbotron style={jumboStyle}>
-                        <h1 style={{ display: "inline" }}>{name}</h1><h3 style={{ display: "inline" }}>{ reconvertPriceLevel(price_level) !== "None" ? ` Pricing: ${reconvertPriceLevel(price_level)}.`: null } {rating ? ` Rating: ${rating}/5` : null }</h3>
-                        <h2>{formatted_address}</h2>
+                        <h1 style={textStyle}>{name}</h1>
+                        <h3>{ reconvertPriceLevel(price_level) !== "None" ? <PricingLabel pricing={price_level} />: null }{" "}{rating ? <Label>Rating: {rating}/5</Label> : null }</h3>
+                        <h2 style={textStyle}>{formatted_address}</h2>
                         <p>
                             { opening_hours ? <Label bsStyle={ opening_hours.open_now ? "success" : "default" }>{ opening_hours.open_now ? "Open Now" : " Closed Now" }</Label> : null }
                         </p>
-                        {this.generateTypeLabels(types)}
+                        {this.generateTypeBadge(types)}
                         <p>
                             <Button disabled={ website ? false : true } bsStyle="primary" onClick={ () => window.open(website, "_blank") }>Official Website</Button>
                         </p>
                     </Jumbotron>
                     
-                { this.props.placeDetails.result && this.props.placeDetails.result.photos && !_.isEmpty(this.props.placePhotos) ? this.generateCarousel(this.props.placePhotos) : null }
-                <Panel>
-                    <Panel.Body>
-                        <PageHeader>Some Reviews</PageHeader>
-                        <ReviewList reviewArray={this.props.placeDetails.result.reviews}/>
-                        <PageHeader>Place Location</PageHeader>
-                        {this.generateRouteTabs(this.props.directionData, geometry.location)}
-                    </Panel.Body>
-                </Panel>
-                {" "}<Button onClick={() => this.props.history.push("/places")}>Back</Button>
+                    { this.props.placeDetails.result && this.props.placeDetails.result.photos && !_.isEmpty(this.props.placePhotos) ? this.generateCarousel(this.props.placePhotos) : null }
+                    <Panel>
+                        <Panel.Body>
+                            <PageHeader>Place Location</PageHeader>
+                            {this.generateRouteTabs(this.props.directionData, geometry.location)}
+                            { opening_hours ? <div><PageHeader>Opening Hours</PageHeader>
+                            <ScheduleTable weekdayText={opening_hours.weekday_text} /></div> : null }
+                            <PageHeader>Customer Reviews</PageHeader>
+                            <ReviewList reviewArray={this.props.placeDetails.result.reviews}/>
+                        </Panel.Body>
+                    </Panel>
+
+                    <Breadcrumb style={{ backgroundColor: "#383838" }}>
+                        <Breadcrumb.Item onClick={() => this.props.history.push("/")}>Search</Breadcrumb.Item>
+                        <Breadcrumb.Item onClick={() => this.props.history.push("/places")}>
+                            Get Places
+                        </Breadcrumb.Item>
+                        <Breadcrumb.Item active>Place Details</Breadcrumb.Item>
+                    </Breadcrumb>
                 </div>
             </div> 
         );

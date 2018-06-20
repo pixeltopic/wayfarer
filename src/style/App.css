@@ -35,4 +35,8 @@ body{
   background-attachment: fixed;
   background-color: #141724;
   background-position-y: 50%;
+  /* footer styling for flexbox */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }

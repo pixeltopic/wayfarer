@@ -9,8 +9,6 @@ import { PolylineMap } from "../common/showMap";
 import "../../style/showDirections.css";
 import banner from "../../assets/direction_banner.gif";
 
-// TODO: add origin/destination to each route tab for more detail along with any other useful details.
-
 class ShowDirections extends Component {
 
     generateSteps(stepArr) {
