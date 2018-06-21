@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import _ from "lodash";
 
 import SearchInput from "./searchInput";
+import SearchInfoDisplay from "./searchInfoDisplay";
 import NavBar from "../common/navBar";
 import FooterBar from "../common/footerBar";
 import logo from "../../assets/bonfire_logo.gif";
@@ -29,9 +30,9 @@ Example URL with all 6 parameters used:
 https://maps.googleapis.com/maps/api/directions/json?origin=Toronto&destination=Montreal&avoid=highways&mode=bicycling&alternatives=true&units=imperial&key=
 
 NEW TODO:
-Finish apps page as displayed on mockup
 Add footer to every page
 Make place list pretty
+Add distance/time info to showDirections
 */
 
 class App extends Component {
@@ -43,6 +44,8 @@ class App extends Component {
             textAlign: "center",
             boxShadow: "3px 3px 3px 1px rgba(0, 0, 0, .6)"
         }
+        const { originInput, destinationInput, travelMode, unit, avoidFerries, avoidHighways, avoidTolls, avoidIndoor } = this.props.searchParameters;
+
         return (
             <div className="App">
                 <header className="App-header">
@@ -61,8 +64,17 @@ class App extends Component {
                         { _.isEmpty(this.props.searchParameters) || _.isEmpty(this.props.directionData) 
                             ? <Alert bsStyle="warning"><strong>Looks like you haven't searched for anything yet, or your search didn't find anything.</strong></Alert> 
                             : <Alert bsStyle="success"><strong>Search Successful!</strong> Some general info for your search displayed below.</Alert> }
+                        { _.isEmpty(this.props.searchParameters) || _.isEmpty(this.props.directionData) 
+                            ? null
+                            : <SearchInfoDisplay 
+                            directionData={this.props.directionData} 
+                            travelMode={travelMode} 
+                            origin={originInput} 
+                            destination={destinationInput} 
+                            unit={unit}
+                            avoid={{avoidTolls, avoidHighways, avoidFerries, avoidIndoor}} />
+                             }
                     </div>
-                    
                 </div>
                 <FooterBar />
             </div>
