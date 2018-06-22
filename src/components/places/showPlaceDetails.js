@@ -3,11 +3,13 @@ import { fetchPlaceDetails, fetchPlacePhotos } from "../../actions/actionTypes";
 import { connect } from "react-redux";
 import _ from "lodash";
 import { Panel, Button, Alert, Carousel, Jumbotron, Label, Tab, Tabs, PageHeader, Badge, Breadcrumb } from "react-bootstrap";
+
 import NavBar from "../common/navBar";
 import { reconvertPriceLevel } from "./placesLogic";
 import { PlacePolylineMap } from "../common/showMap";
 import ReviewList from "./reviewList";
 import ScheduleTable from "./scheduleTable";
+import FooterBar from "../common/footerBar";
 import "../../style/showPlaceDetails.css";
 import banner from "../../assets/place_detail_banner.gif";
 // import { Link } from "react-router-dom";
@@ -162,6 +164,7 @@ class ShowPlaceDetails extends Component {
                         <Breadcrumb.Item active>Place Details</Breadcrumb.Item>
                     </Breadcrumb>
                 </div>
+                <FooterBar />
             </div> 
         );
     }

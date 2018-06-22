@@ -8,6 +8,7 @@ import NavBar from "../common/navBar";
 import { IncidentPolylineMap } from "../common/showMap";
 import { updateFullIncidentState } from "./incidentLogic";
 import { fetchIncidents } from "../../actions/actionTypes";
+import FooterBar from "../common/footerBar";
 import "../../style/showIncidents.css";
 import banner from "../../assets/incidents_banner.gif";
 
@@ -113,6 +114,7 @@ class ShowIncidents extends Component {
                         <Alert bsStyle="info">
                             <strong>No Info Found...</strong> You can only view traffic incidents if you are driving.
                         </Alert>
+                        <FooterBar />
                     </div>
                 );
                 
@@ -123,6 +125,7 @@ class ShowIncidents extends Component {
                         <Alert bsStyle="warning">
                             <strong>No Info Found...</strong> Looks like you haven't searched anything, your search was invalid, or the page needs to be refreshed.
                         </Alert>
+                        <FooterBar />
                     </div>
                 );
             }
@@ -156,6 +159,7 @@ class ShowIncidents extends Component {
                         {this.generateTabs()}
                     </Panel.Body>
                 </Panel>
+                <FooterBar />
             </div>
         );
     }

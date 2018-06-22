@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import _ from "lodash";
-import { Well, Button, ListGroup, ListGroupItem, Panel, Alert, Jumbotron } from "react-bootstrap";
+import { Well, Button, ListGroup, ListGroupItem, Panel, Alert, Jumbotron, Media, PageHeader } from "react-bootstrap";
 import { formValueSelector } from "redux-form";
 import { getDistance } from "geolib";
 import { Link } from "react-router-dom";
@@ -10,6 +10,7 @@ import NavBar from "../common/navBar";
 import { fetchMorePlaces, fetchPlaceDetails, clearPlaceDetails, clearPlacePhotos } from "../../actions/actionTypes";
 import SearchInputPlaces from "./searchInputPlaces";
 import FilterPlaces from "./filterPlaces";
+import FooterBar from "../common/footerBar";
 import "../../style/showPlaces.css";
 import banner from "../../assets/places_banner.gif";
 
@@ -65,12 +66,23 @@ class ShowPlaces extends Component {
                 let distanceAway = getDistance({ lat: dest.lat, lng: dest.lng }, { lat: place.geometry.location.lat, lng: place.geometry.location.lng });
                 let distanceAwayStr = `${unitDisplay === "metric" ? distanceAway/1000 : Math.round(distanceAway/1609*100)/100 } ${unitDisplay === "metric" ? "km" : "mi"}`;
                 return (
-                    <ListGroupItem key={key++} header={place.name}>Located {distanceAwayStr} away at {place.vicinity}
-                    <Link onClick={() => {
-                        this.props.clearPlaceDetails();
-                        this.props.clearPlacePhotos();
-                        this.props.fetchPlaceDetails(place.place_id);
-                        }} to={"/places/details"} > View more</Link>        
+                    <ListGroupItem key={key++}>
+                        <Media>
+                            <Media.Body>
+                                <Media.Heading>
+                                    {place.name}
+                                </Media.Heading>
+                                Located {distanceAwayStr} away at {place.vicinity}
+                                <Link onClick={() => {
+                                this.props.clearPlaceDetails();
+                                this.props.clearPlacePhotos();
+                                this.props.fetchPlaceDetails(place.place_id);
+                                }} to={"/places/details"} > View more</Link>   
+                            </Media.Body>
+                            <Media.Right>
+                                <img width={32} height={32} alt="Place_Icon" src={place.icon}/>
+                            </Media.Right>
+                        </Media>
                     </ListGroupItem>
                 );
             }
@@ -91,6 +103,7 @@ class ShowPlaces extends Component {
                     <Alert bsStyle="warning">
                         <strong>No Info Found...</strong> Looks like you haven't searched any routes, your search was invalid, or the page needs to be refreshed.
                     </Alert>
+                    <FooterBar />
                 </div>
             );
         }
@@ -121,11 +134,13 @@ class ShowPlaces extends Component {
                         <Well><SearchInputPlaces /></Well>
                         <Panel><Panel.Body>
                         <FilterPlaces />
+                        <PageHeader>Results</PageHeader>
                         {this.renderPageResults(this.filterPageResults(this.props.placesData.results, this.props.filterInput))}
                         <Button disabled={ this.props.placesData.nextPageToken ? false : true }
                         onClick={() => this.props.fetchMorePlaces(this.props.placesData.nextPageToken)}>Show More</Button>
                         </Panel.Body></Panel>
                     </div>
+                    <FooterBar />
                 </div>
             );
         } else if (this.props.placesData.results && this.props.placesData.results.length === 0) {
@@ -145,6 +160,7 @@ class ShowPlaces extends Component {
                             <strong>No Info Found...</strong> No places were found that matched your query.
                         </Alert>
                     </div>
+                    <FooterBar />
                 </div>
             );
 
@@ -165,6 +181,7 @@ class ShowPlaces extends Component {
                             <strong>No Info Found...</strong> Looks like you haven't searched anything or your search was invalid.
                         </Alert>
                     </div>
+                    <FooterBar />
                 </div>
             );
         }

@@ -2,10 +2,11 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import _ from "lodash";
 // import { formValueSelector } from "redux-form";
-import { Tabs, Tab, Panel, ListGroup, ListGroupItem, Alert, PageHeader, Jumbotron } from "react-bootstrap";
+import { Tabs, Tab, Panel, ListGroup, ListGroupItem, Alert, PageHeader, Jumbotron, Label } from "react-bootstrap";
 
 import NavBar from "../common/navBar";
 import { PolylineMap } from "../common/showMap";
+import FooterBar from "../common/footerBar";
 import "../../style/showDirections.css";
 import banner from "../../assets/direction_banner.gif";
 
@@ -46,6 +47,10 @@ class ShowDirections extends Component {
                     <PageHeader>Route Visualization</PageHeader>
                     <PolylineMap overviewPolyline={route.overview_polyline.points} routeBounds={route.bounds}/>
                     <PageHeader>Route Directions</PageHeader>
+                    <h3 style={{ marginBottom: "25px" }}>
+                        {" "}{route["legs"]["0"]["distance"] && route["legs"]["0"]["distance"].text ? <Label bsStyle="primary" >{route["legs"]["0"]["distance"].text}</Label> : null}
+                        {" "}{route["legs"]["0"]["duration"] && route["legs"]["0"]["duration"].text ? <Label bsStyle="info" >{route["legs"]["0"]["duration"].text}</Label> : null}
+                    </h3>
                     {this.generateSteps(route["legs"]["0"]["steps"])}
                 </Tab>
             );
@@ -70,6 +75,7 @@ class ShowDirections extends Component {
                     <Alert bsStyle="warning">
                         <strong>No Info Found...</strong> Looks like you haven't searched anything, or your search was invalid.
                     </Alert>
+                    <FooterBar />
                 </div>
             );
         }
@@ -98,6 +104,7 @@ class ShowDirections extends Component {
                         {this.generateTabs()}
                     </Panel.Body>
                 </Panel>
+                <FooterBar />
             </div>
         );
     }

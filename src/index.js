@@ -38,6 +38,7 @@ ReactDOM.render(
                     <Route path="/places/details" component={ShowPlaceDetails} />
                     <Route path="/places" component={ShowPlaces} />
                     <Route path="/" component={App} />
+                    <Route component={() => (<div>404 Not found </div>)} />
                 </Switch>
             </div>
         </BrowserRouter>

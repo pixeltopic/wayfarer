@@ -14,7 +14,7 @@ import "../../style/App.css";
 // cd C:\Users\xmobl\Documents\GitRepos\wayfarer
 
 /*
-LEGACY TODO:
+Notes:
 searchInput Form info - REQUIRED:
 origin/destination=input
 travel mode=drop down menu (driving, bicycling, walking, transit)
@@ -29,10 +29,6 @@ units=dropdown (metric or imperial, imperial by default)
 Example URL with all 6 parameters used:
 https://maps.googleapis.com/maps/api/directions/json?origin=Toronto&destination=Montreal&avoid=highways&mode=bicycling&alternatives=true&units=imperial&key=
 
-NEW TODO:
-Add footer to every page
-Make place list pretty
-Add distance/time info to showDirections
 */
 
 class App extends Component {
