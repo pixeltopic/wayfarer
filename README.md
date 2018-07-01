@@ -22,13 +22,13 @@ Use the web app [here](https://wayfarer.surge.sh/)!
 - [react-router-dom](https://www.npmjs.com/package/react-router-dom): Dom bindings for [react-router](https://www.npmjs.com/package/react-router).
 - [redux](https://www.npmjs.com/package/redux): predictable state container for JS apps.
 - [redux-form](https://www.npmjs.com/package/redux-form): HOC for forms using react and redux.
-- [redux-promise](https://www.npmjs.com/package/redux-promise): Promise middleware for Redux.
+- [redux-promise](https://www.npmjs.com/package/redux-promise): Promise middleware for redux.
 
 ## Other Credits
 
 - [Create React App](https://github.com/facebook/create-react-app): Create react apps with no build configuration.
 - Pixel Art: various artists including but not limited to [Edermunizz](https://edermunizz.tumblr.com/), [Kirokaze](https://www.behance.net/kirokaze), [Capybara Games](https://store.steampowered.com/app/204060/Superbrothers_Sword__Sworcery_EP/), [Biuzer](https://www.reddit.com/user/biuzer).
 - Favicon by [Fryiee](https://fryiee.deviantart.com/art/Dark-Souls-II-Black-Armor-Edition-Cover-Pixel-Art-443093135)
-- Trello and Mockflow for development process.
+- Trello, Postman, and Mockflow for development process.
 - Various Google APIs such as Directions, Maps, Places, Place Details
 - MapQuest Incidents API
